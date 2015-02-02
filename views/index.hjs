@@ -54,7 +54,7 @@
 
           <div class="mastfoot">
             <div class="inner">
-              <p>Sign in or sign up to get started.</p>
+              <p><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
             </div>
           </div>
 
