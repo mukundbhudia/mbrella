@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/User');
 
 /* GET login page. */
 router.get('/', function(req, res) {
@@ -9,20 +10,26 @@ router.get('/', function(req, res) {
 /* GET login page. */
 router.post('/', function(req, res) {
     // sess = req.session;
-    var userName = req.body.username;
+    var userEmail = req.body.useremail;
     var userPassword = req.body.userpassword;
-    // sess.username = userName;
+    console.log(req.body);
+    // sess.userEmail = userEmail;
     // sess.password = userPassword;
-    console.log('username and password are:' + userName + " and " + userPassword);
-    //TODO: proper authentication
-    if (userName && userPassword) {
-        // res.cookie('loginStatus', sess.userstatus);
-        res.location('/');
-        res.redirect('/');
-        console.log(userName + ' has logged in');
-    } else {
-        res.render('login', { title: 'Node Chat', loginInfo: 'Incorrect username or password' });
-    }
+    User.find({email: userEmail, password: userPassword}, function(err, doc){
+        console.log(doc);
+        if (doc[0]) {
+            var foundUser = doc[0].toObject();
+            if (doc.length === 1 && userEmail === foundUser.email && userPassword === foundUser.password) {
+                // res.cookie('loginStatus', sess.userstatus);
+                res.location('/');
+                res.redirect('/');
+                console.log(userEmail + ' has logged in');
+            }
+        } else {
+            console.log("unsuccessful login, sending back to login page...");
+            res.render('login', { title: 'Brella', loginInfo: 'Incorrect email or password' });
+        }
+    });
 });
 
 module.exports = router;
