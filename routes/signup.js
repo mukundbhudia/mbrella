@@ -27,20 +27,31 @@ router.post('/', function(req, res) {
         password: userPassword
     });
 
-    userToSignup.save(function (err, userToSignup) {
-        if (err) return console.error(err);
-        userToSignup.getFullName();
-        // User.findById(userToSignup._id, function (err, usr) {
-        //     console.log(usr)
-        // })
-    });
-    //TODO: proper authentication
-    if (userFirstName && userPassword) {
-        res.location('/');
-        res.redirect('/');
-        console.log(userToSignup.getFullName() + ' has signed up to Brella');
+    if (userFirstName && userLastName && userPassword && userEmail) {
+
+        User.find({email: userEmail}, function(err, doc){
+            console.log(doc);
+            if (doc[0]) {   //If a result exists then the correct user has logged in
+                var foundUser = doc[0].toObject(); //Need to convert to JSON object
+                if (doc.length === 1 && userEmail === foundUser.email) {
+                    res.render('signup', { title: 'Brella', signUpInfo: 'The email address ' + userEmail + ' is already taken, please try again.' });
+                    console.log("Sign up unsuccessful, user: " + userEmail + " already exists. Sending back to sign up page...");
+                }
+            } else {
+                userToSignup.save(function (err, userToSignup) {
+                    if (err) return console.error(err);
+                    User.findById(userToSignup._id, function (err, usr) {
+                        console.log(usr)
+                    })
+                    console.log("User: " + userToSignup.getFullName() + " with email: " + userEmail + ' has signed up.');
+                    res.location('/');
+                    res.redirect('/');
+                });
+            }
+        });
+
     } else {
-        res.render('signup', { title: 'Node Chat', loginInfo: 'Incorrect username or password' });
+        res.render('signup', { title: 'Node Chat', signUpInfo: 'Please fill out all data' });
     }
 });
 
