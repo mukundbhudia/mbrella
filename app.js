@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -24,7 +25,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+//Set up the express session middleware
+//NOTE: this session middleware must be defined before the routes below
+app.use(session({
+    secret: 'shhhhh1234',
+    resave: false,
+    saveUninitialized: true
+}));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/login', login);

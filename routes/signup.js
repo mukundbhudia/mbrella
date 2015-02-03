@@ -4,16 +4,10 @@ var User = require('../models/User');
 
 /* GET signup page. */
 router.get('/', function(req, res) {
-
-    User.find().count(function (err, count) {
-        if (err) return console.error(err);
-        console.log(count + " users already exist.");
-    });
-
   res.render('signup', { title: 'Brella' });
 });
 
-/* GET signup page. */
+/* POST signup page. */
 router.post('/', function(req, res) {
     var userFirstName = req.body.userfirstname;
     var userLastName = req.body.userlastname;
@@ -30,7 +24,6 @@ router.post('/', function(req, res) {
     if (userFirstName && userLastName && userPassword && userEmail) {
 
         User.find({email: userEmail}, function(err, doc){
-            console.log(doc);
             if (doc[0]) {   //If a result exists then the correct user has logged in
                 var foundUser = doc[0].toObject(); //Need to convert to JSON object
                 if (doc.length === 1 && userEmail === foundUser.email) {
@@ -40,9 +33,6 @@ router.post('/', function(req, res) {
             } else {
                 userToSignup.save(function (err, userToSignup) {
                     if (err) return console.error(err);
-                    User.findById(userToSignup._id, function (err, usr) {
-                        console.log(usr)
-                    })
                     console.log("User: " + userToSignup.getFullName() + " with email: " + userEmail + ' has signed up.');
                     res.location('/');
                     res.redirect('/');
