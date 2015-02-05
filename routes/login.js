@@ -1,5 +1,4 @@
 var express = require('express');
-var session = require('express-session');
 var router = express.Router();
 var User = require('../models/User');
 
@@ -13,9 +12,7 @@ router.post('/', function(req, res) {
     var sess = req.session;
     var userEmail = req.body.useremail;
     var userPassword = req.body.userpassword;
-    console.log(req.body);
     User.find({email: userEmail, password: userPassword}, function(err, doc){
-        console.log(doc);
         if (doc[0]) {   //If a result exists then the correct user has logged in
             var foundUser = doc[0].toObject(); //Need to convert to JSON object
             if (doc.length === 1 && userEmail === foundUser.email && userPassword === foundUser.password) {
