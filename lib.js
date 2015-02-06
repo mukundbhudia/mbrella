@@ -36,10 +36,10 @@ module.exports = {
                         for (i = 1; i < (cityArray.length - 1); i++) {
                                 var cityLine = cityArray[i].split("\t");    // split up each line...
                                 var cityToSave = {                          // ...to form JSON
-                                    cityID: cityLine[0],
+                                    cityID: parseInt(cityLine[0]),
                                     cityName: cityLine[1],
-                                    latitude: cityLine[2],
-                                    longtitude: cityLine[3],
+                                    latitude: parseFloat(cityLine[2]),
+                                    longtitude: parseFloat(cityLine[3]),
                                     countryCode: cityLine[4]
                                 };
                                 cities.push(cityToSave);

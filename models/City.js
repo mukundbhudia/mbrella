@@ -3,10 +3,10 @@
 var mongoose = require('mongoose');
 
 var citySchema = mongoose.Schema({
-    cityID: String,
+    cityID: Number,
     cityName: String,
-    latitude: String,
-    longtitude: String,
+    latitude: Number,
+    longtitude: Number,
     countryCode: String
 });
 
