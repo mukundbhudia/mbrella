@@ -40,7 +40,8 @@ module.exports = {
                                     cityName: cityLine[1],
                                     latitude: parseFloat(cityLine[2]),
                                     longtitude: parseFloat(cityLine[3]),
-                                    countryCode: cityLine[4]
+                                    countryCode: cityLine[4],
+                                    __v : 0
                                 };
                                 cities.push(cityToSave);
                         }

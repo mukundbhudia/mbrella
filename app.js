@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
+var findCity = require('./routes/findCity');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/signup', signup);
+app.use('/findCity', findCity);
 
 mongoose.connect('mongodb://localhost/brella', function(err){
     if (err) {
