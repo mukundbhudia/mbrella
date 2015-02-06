@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
+var lib = require('./lib');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -44,6 +45,8 @@ mongoose.connect('mongodb://localhost/brella', function(err){
         console.log("Connection to DB successful");
     }
 });
+
+lib.populateCityData();
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
