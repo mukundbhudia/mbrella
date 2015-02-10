@@ -42,13 +42,14 @@ app.use('/findCity', findCity);
 
 mongoose.connect('mongodb://localhost/brella', function(err){
     if (err) {
-        console.log("Connection to DB error: " + err);
+        console.log("Connection to DB error: " + err + "\n");
     } else {
-        console.log("Connection to DB successful");
+        console.log("Connection to DB successful \n");
     }
 });
 
 lib.populateCityData();
+lib.checkCountryData();
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
