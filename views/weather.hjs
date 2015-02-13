@@ -32,7 +32,7 @@
 
             <div class="cover-container">
 
-                <div class="masthead clearfix">
+                <div class="clearfix">
                     <div class="inner">
                         <h3 class="masthead-brand">{{cityName}} | {{countryCode}}</h3>
                         <nav>
@@ -47,14 +47,59 @@
 
                 <div class="inner cover">
                     <h1 class="cover-heading">The weather for {{cityName}} - {{countryName}}.</h1>
-                    <p class="lead">Location: ({{latitude}}, {{longtitude}})</p>
-                    <p class="lead"></p>
+                    <p id="wDesc" class="lead"></p>
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Feild</th>
+                                <th>Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Temp</th>
+                                <td id="wTemp"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Temp min</th>
+                                <td id="wTemp_min"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Temp max</th>
+                                <td id="wTemp_max"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Cloud cover</th>
+                                <td id="wCloud"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Wind (speed|direction)</th>
+                                <td id="wWind"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Pressure</th>
+                                <td id="wPressure"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Humidity</th>
+                                <td id="wHumidity"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sunrise</th>
+                                <td id="wSunrise"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sunset</th>
+                                <td id="wSunset"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div id="map-canvas"></div>
                     <div id="cityResults" class="list-group">
                     </div>
                 </div>
 
-                <div class="mastfoot">
+                <div class="">
                     <div class="inner">
                         <p><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
                     </div>
@@ -75,14 +120,58 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAUb2FVPgPIAaDqtF0gC0j4Km5xwU8d1w"></script>
     <script type="text/javascript">
     function initialize() {
+        var cityLatlng = new google.maps.LatLng({{latitude}}, {{longtitude}});
         var mapOptions = {
-            center: { lat: {{latitude}}, lng: {{longtitude}}},
-            zoom: 8
+            center: cityLatlng,
+            zoom: 8,
+            draggable: false
         };
         var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
+        var marker = new google.maps.Marker({
+            position: cityLatlng,
+            map: map,
+            title: 'City'
+        });
     }
+
+    function getDate(unixUTC) {
+        var date = new Date(parseInt(unixUTC)*1000);
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        return hours + ':' + minutes + " GMT";
+    }
+
+    function getWindChill(temp, windSpeed){
+        return 13.12 + 0.6215*temp + ((windSpeed*3.6)^(0.16))*(0.3965*temp - 11.37);
+    }
+
     google.maps.event.addDomListener(window, 'load', initialize);
+
+    $.get("/getWeather/{{cityID}}", function(data) {
+        if (data) {
+            $("#wDesc","#wTemp","#wTemp_max","#wTemp_min","#wCloud",
+            "#wWind","#wPressure","#wHumidity","#wSunrise","#wSunset").empty();
+
+            $("#wDesc").text(data.weather[0].main + " - " + data.weather[0].description);
+            $("#wTemp").html(Math.ceil(data.main.temp - 273.15) + "&deg;C");
+            $("#wTemp_max").html(Math.ceil(data.main.temp_max - 273.15) + "&deg;C");
+            $("#wTemp_min").html(Math.ceil(data.main.temp_min - 273.15) + "&deg;C");
+            $("#wCloud").html(
+                "<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='" + data.clouds.all +"' aria-valuemin='0' aria-valuemax='100' style='width: " + data.clouds.all +"%;'>" + data.clouds.all +"%</div></div>"
+            );
+            $("#wWind").text(data.wind.speed + " mps | " + data.wind.deg);
+            $("#wPressure").text(data.main.pressure + " mb");
+            $("#wHumidity").html(
+                "<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='" + data.main.humidity +"' aria-valuemin='0' aria-valuemax='100' style='width: " + data.main.humidity +"%;'>" + data.main.humidity +"%</div></div>"
+            );
+            $("#wSunrise").text(getDate(data.sys.sunrise));
+            $("#wSunset").text(getDate(data.sys.sunset));
+            console.log("wind chill:" + getWindChill((data.main.temp - 273.15), data.wind.speed));
+        }
+    });
+
     </script>
 </body>
 </html>

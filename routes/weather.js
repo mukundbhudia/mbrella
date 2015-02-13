@@ -11,6 +11,7 @@ router.get('/:cityID', function(req, res) {
             Country.findOne({countryCode: citydoc.countryCode}, function(err, countrydoc) {
                 if (countrydoc) {
                     res.render('weather', {
+                        cityID : cityID,
                         cityName: citydoc.cityName,
                         countryName: countrydoc.countryName,
                         countryCode: citydoc.countryCode,
