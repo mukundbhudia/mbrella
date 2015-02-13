@@ -11,3 +11,7 @@
 	max-height: 206px;
 	overflow: scroll;
 }
+
+#map-canvas {
+	height: 250px; width: 650px; margin: 0; padding: 0;
+}
