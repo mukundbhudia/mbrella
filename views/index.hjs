@@ -82,7 +82,7 @@
     $('#citySearch').keyup(function(e){
         var enteredText = $('#citySearch').val();
         // console.log(enteredText);
-        if (enteredText !== "") {
+        if ( (enteredText !== "") && (enteredText.length >= 3) ) {
             $.get("findCity/"+ enteredText, function(data) {
                 // console.log(data);
                 if (data) {

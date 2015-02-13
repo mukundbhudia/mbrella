@@ -132,7 +132,8 @@ var checkCountryData = function() {
                         for (i = 0; i < countryCodes.length; i++) {
                             var countryToAdd = {
                                 countryCode : countryCodes[i]["alpha-2"],
-                                countryName : countryCodes[i].name
+                                countryName : countryCodes[i].name,
+                                __v : 0
                             }
                             countriesToAdd.push(countryToAdd);
                         }
