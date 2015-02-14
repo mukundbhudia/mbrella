@@ -38,7 +38,6 @@
                         <nav>
                             <ul class="nav masthead-nav">
                                 <li class="active"><a href="/">Home</a></li>
-                                <li><a href="#">Your weather</a></li>
                                 <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
                             </ul>
                         </nav>

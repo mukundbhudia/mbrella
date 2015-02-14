@@ -10,15 +10,23 @@ router.get('/:cityID', function(req, res) {
         if (citydoc) {
             Country.findOne({countryCode: citydoc.countryCode}, function(err, countrydoc) {
                 if (countrydoc) {
-                    res.render('weather', {
+                    var sess = req.session;
+                    var weatherToSend = {
                         cityID : cityID,
                         cityName: citydoc.cityName,
                         countryName: countrydoc.countryName,
                         countryCode: citydoc.countryCode,
                         latitude: citydoc.latitude,
                         longtitude: citydoc.longtitude
-                    });
-                    // res.json(citydoc);
+                    };
+                    if (sess.useremail) {
+                        weatherToSend.personalURL = '#';
+                        weatherToSend.personalMessage = sess.userfirstname + "'s weather";
+                    } else {
+                        weatherToSend.personalURL = 'login';
+                        weatherToSend.personalMessage = "Log in";                        
+                    }
+                    res.render('weather', weatherToSend);
                 } else {
                     res.send("Error: Cannot find country code: " + citydoc.countryCode);
                 }
