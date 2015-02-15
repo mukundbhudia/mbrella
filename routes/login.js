@@ -18,6 +18,7 @@ router.post('/', function(req, res) {
             if (doc.length === 1 && userEmail === foundUser.email && userPassword === foundUser.password) {
                 sess.useremail = foundUser.email;
                 sess.userfirstname = foundUser.firstName;
+                sess.userID = foundUser._id;
                 res.location('/');
                 res.redirect('/');
                 console.log(userEmail + ' has logged in');

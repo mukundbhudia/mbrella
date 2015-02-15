@@ -9,7 +9,7 @@ var session = require('express-session');
 var lib = require('./lib');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
 var findCity = require('./routes/findCity');
@@ -37,7 +37,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use('/', routes);
-app.use('/users', users);
+app.use('/user', user);
 app.use('/login', login);
 app.use('/signup', signup);
 app.use('/findCity', findCity);
