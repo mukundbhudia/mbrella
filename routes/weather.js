@@ -12,6 +12,7 @@ router.get('/:cityID', function(req, res) {
                 if (countrydoc) {
                     var sess = req.session;
                     var weatherToSend = {
+                        title: "Brella",
                         cityID : cityID,
                         cityName: citydoc.cityName,
                         countryName: countrydoc.countryName,
@@ -24,7 +25,7 @@ router.get('/:cityID', function(req, res) {
                         weatherToSend.personalMessage = sess.userfirstname + "'s weather";
                     } else {
                         weatherToSend.personalURL = 'login';
-                        weatherToSend.personalMessage = "Log in";                        
+                        weatherToSend.personalMessage = "Log in";
                     }
                     res.render('weather', weatherToSend);
                 } else {

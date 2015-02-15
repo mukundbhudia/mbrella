@@ -13,5 +13,34 @@
 }
 
 #map-canvas {
-	height: 250px; width: 650px; margin: 0; padding: 0;
+	height: 250px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#feildCol {
+	width: 40%;
+}
+
+#statsCol {
+	width: 60%;
+}
+
+div.progress{
+	margin-bottom: 0px;
+}
+
+#weatherIconContainer {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#wTemp {
+	font-size: 76px;
+}
+
+#wIcon {
+	filter: brightness(4.5);
+	-webkit-filter: brightness(4.5);
 }

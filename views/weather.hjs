@@ -34,7 +34,7 @@
 
                 <div class="clearfix">
                     <div class="inner">
-                        <h3 class="masthead-brand">{{cityName}} | {{countryCode}}</h3>
+                        <h3 class="masthead-brand">{{title}}</h3>
                         <nav>
                             <ul class="nav masthead-nav">
                                 <li class="active"><a href="/">Home</a></li>
@@ -45,34 +45,32 @@
                 </div>
 
                 <div class="inner cover">
-                    <h1 class="cover-heading">The weather for {{cityName}} - {{countryName}}.</h1>
-                    <p id="wDesc" class="lead"></p>
-                    <table class="table table-bordered table-condensed">
+                    <div class="row">
+                        <h2 class="cover-heading">{{cityName}} - {{countryName}}</h2>
+                        <div class="col-md-4">
+                            <div id="weatherIconContainer">
+                                <img id="wIcon" src="" alt="">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="wTemp"></div>
+                            <p id="wDesc" class="lead"></p>
+                        </div>
+                    </div>
+                    <table id="weatherDataTable" class="table table-condensed">
                         <thead>
                             <tr>
-                                <th>Feild</th>
-                                <th>Stats</th>
+                                <th id="feildCol">Feild</th>
+                                <th id="statsCol">Stats</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">Temp</th>
-                                <td id="wTemp"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Temp min</th>
-                                <td id="wTemp_min"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Temp max</th>
-                                <td id="wTemp_max"></td>
-                            </tr>
                             <tr>
                                 <th scope="row">Cloud cover</th>
                                 <td id="wCloud"></td>
                             </tr>
                             <tr>
-                                <th scope="row">Wind (speed|direction)</th>
+                                <th scope="row">Wind (speed | direction)</th>
                                 <td id="wWind"></td>
                             </tr>
                             <tr>
@@ -155,18 +153,24 @@
 
             $("#wDesc").text(data.weather[0].main + " - " + data.weather[0].description);
             $("#wTemp").html(Math.ceil(data.main.temp - 273.15) + "&deg;C");
-            $("#wTemp_max").html(Math.ceil(data.main.temp_max - 273.15) + "&deg;C");
-            $("#wTemp_min").html(Math.ceil(data.main.temp_min - 273.15) + "&deg;C");
+            //TODO: Max and min temps shown elsewhere
+            // $("#wTemp_max").html(Math.ceil(data.main.temp_max - 273.15) + "&deg;C");
+            // $("#wTemp_min").html(Math.ceil(data.main.temp_min - 273.15) + "&deg;C");
             $("#wCloud").html(
-                "<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='" + data.clouds.all +"' aria-valuemin='0' aria-valuemax='100' style='width: " + data.clouds.all +"%;'>" + data.clouds.all +"%</div></div>"
+                "<div class='progress'><div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='" +
+                data.clouds.all +"' aria-valuemin='0' aria-valuemax='100' style='width: " + data.clouds.all +"%;'>" +
+                data.clouds.all +"%</div></div>"
             );
             $("#wWind").text(data.wind.speed + " mps | " + data.wind.deg);
             $("#wPressure").text(data.main.pressure + " mb");
             $("#wHumidity").html(
-                "<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='" + data.main.humidity +"' aria-valuemin='0' aria-valuemax='100' style='width: " + data.main.humidity +"%;'>" + data.main.humidity +"%</div></div>"
+                "<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='" +
+                data.main.humidity +"' aria-valuemin='0' aria-valuemax='100' style='width: " +
+                data.main.humidity +"%;'>" + data.main.humidity +"%</div></div>"
             );
             $("#wSunrise").text(getDate(data.sys.sunrise));
             $("#wSunset").text(getDate(data.sys.sunset));
+            $("#wIcon").attr('src',"/images/weatherIcons/" + data.weather[0].icon + ".png");
             console.log("wind chill:" + getWindChill((data.main.temp - 273.15), data.wind.speed));
         }
     });
