@@ -3,6 +3,38 @@
 var http = require('http');
 var City = require('./models/City');
 var Country = require('./models/Country');
+var Weather = require('./models/Weather');
+
+/*
+    Accesses Open Weather Map API for a given city ID to get the current weather.
+    Once data is successfully accessed, its parsed as JSON and saved to the DB to
+    the weather collection as part of the Weather model.
+*/
+
+var getAndSaveWeather = function(cityID, callback) {
+    http.get("http://api.openweathermap.org/data/2.5/weather?id=" + cityID, function(getRes) {
+        console.log("Got response: " + getRes.statusCode + " collecting city data...");
+        //Build up the data from the HTTP GET request using the body variable (as it is streamed)
+        var body = "";
+        getRes.on('data', function(data) {
+            body += data.toString();    //accumulate text buffer as string
+        });
+        getRes.on('end', function () {     //action after data transmission
+            var currentWeather = JSON.parse(body);  //TODO: try/catch here? body could be malformed
+            weatherToSave = new Weather(currentWeather);
+            //Perfrom save to db
+            weatherToSave.save(function (err, data) {
+                if (err) return console.error(err);
+                console.log("Weather data for " + currentWeather.name +
+                " with ID: " + currentWeather.id + " saved.");
+            });
+            //Return the weather to callback function
+            callback && callback(currentWeather);
+        });
+    }).on('error', function(e) {
+        console.log("Got error: " + e.message);
+    });
+}
 
 /*
     Accesses Open Weather Map URL to obtain a city text file.
@@ -156,6 +188,7 @@ var checkCountryData = function() {
 }
 
 module.exports = {
+    getAndSaveWeather: getAndSaveWeather,
     populateCityData: populateCityData,
     compareCountryCodes: compareCountryCodes,
     checkCountryData: checkCountryData

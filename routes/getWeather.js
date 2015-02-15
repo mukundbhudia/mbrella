@@ -1,22 +1,40 @@
 var http = require('http');
 var express = require('express');
 var router = express.Router();
+var Weather = require('../models/Weather');
+var lib = require('../lib');
 
 /* GET current weather listing. */
 router.get('/:cityID', function(req, res) {
     var cityID = req.params.cityID;
-    http.get("http://api.openweathermap.org/data/2.5/weather?id=" + cityID, function(getRes) {
-        console.log("Got response: " + getRes.statusCode + " collecting city data...");
-        var body = "";
-        getRes.on('data', function(data) {
-            body += data.toString();    //accumulate text buffer as string
-        });
-        getRes.on('end', function () {     //action after data transmission
-            var currentWeather = JSON.parse(body);
-            res.json(currentWeather);
-        });
-    }).on('error', function(e) {
-        console.log("Got error: " + e.message);
+    //We get the most recent weather data document by city ID parameter
+    Weather.find({id: cityID}).sort({dateret: "descending"}).limit(1).exec(function(err, data) {
+        if (err) return console.error(err);
+        //Check if data is returned and is not empty
+        if (data && (data.length > 0) ) {
+
+            var dbWeather = data[0];
+            var dbWeatherDate = new Date(dbWeather.dateret);
+            var currentDate = new Date();
+            var tenMinsInMilliseconds = 600000;
+            //Compare the db time (in milliseconds) for the document 10 mins ahead
+            //This is to prevent overloading OWM with requests
+            if (currentDate.getTime()  < (dbWeatherDate.getTime() + tenMinsInMilliseconds) ) {
+                console.log("\tWeather data not older than 10 mins, obtaining from DB...");
+                res.json(dbWeather);
+            } else {
+                console.log("\tWeather data older than 10 mins, obtaining from API...");
+                lib.getAndSaveWeather(cityID, function(weather) {   //ask library to access API
+                    res.json(weather);
+                });
+            }
+        } else {
+            //If no weather document for the city ID parameter is found, the API is accessed
+            console.log("\tWeather data not in DB, obtaining from API...");
+            lib.getAndSaveWeather(cityID, function(weather) {
+                res.json(weather);
+            });
+        }
     });
 });
 
