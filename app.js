@@ -44,7 +44,9 @@ app.use('/findCity', findCity);
 app.use('/getWeather', getWeather);
 app.use('/weather', weather);
 
-mongoose.connect('mongodb://localhost/brella', function(err){
+var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/brella'
+
+mongoose.connect(mongoURI, function(err){
     if (err) {
         console.log("Connection to DB error: " + err + "\n");
     } else {
