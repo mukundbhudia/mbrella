@@ -13,7 +13,7 @@ var Weather = require('./models/Weather');
 
 var getAndSaveWeather = function(cityID, callback) {
     http.get("http://api.openweathermap.org/data/2.5/weather?id=" + cityID, function(getRes) {
-        console.log("Got response: " + getRes.statusCode + " collecting city data...");
+        console.log("Got response: " + getRes.statusCode + " collecting weather data...");
         //Build up the data from the HTTP GET request using the body variable (as it is streamed)
         var body = "";
         getRes.on('data', function(data) {

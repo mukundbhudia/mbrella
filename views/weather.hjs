@@ -45,16 +45,19 @@
                 </div>
 
                 <div class="inner cover">
-                    <div class="row">
-                        <h2 class="cover-heading">{{cityName}} - {{countryName}}</h2>
+                    <h2 class="cover-heading">{{cityName}} - {{countryName}}</h2>
+                    <div id="mainWeatherRow" class="row">
+
                         <div class="col-md-4">
                             <div id="weatherIconContainer">
                                 <img id="wIcon" src="" alt="">
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <div id="wTemp"></div>
-                            <p id="wDesc" class="lead"></p>
+                            <div id="mainWeatherInfo">
+                                <div id="wTemp"></div>
+                                <p id="wDesc" class="lead"></p>
+                            </div>
                         </div>
                     </div>
                     <table id="weatherDataTable" class="table table-condensed">

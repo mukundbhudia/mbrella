@@ -31,16 +31,28 @@ div.progress{
 	margin-bottom: 0px;
 }
 
-#weatherIconContainer {
+#citySearch {
+	width: 300px;
+}
+
+div#mainWeatherRow {
 	margin-top: 20px;
 	margin-bottom: 20px;
+}
+
+div#mainWeatherInfo {
+	/*margin-top: 8%;*/
+}
+
+p#wDesc.lead{
+	margin-bottom: 0px;
 }
 
 #wTemp {
 	font-size: 76px;
 }
 
-#wIcon {
+img#wIcon {
 	filter: brightness(4.5);
 	-webkit-filter: brightness(4.5);
 }
