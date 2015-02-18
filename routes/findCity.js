@@ -9,7 +9,9 @@ router.get('/:cityToFind', function(req, res) {
     if (cityToFind.length >= 3) {
         console.log("Searching for cities containing: " + cityToFind + "...");
         //TODO: Check the regex. Needs to allow "City of London" when searching for "london"
-        City.find({cityName: { $regex: new RegExp("" + cityToFind.toLowerCase(), "i") }}, function(err, doc) {
+        City.find({
+             cityName: { $regex: new RegExp("" + cityToFind.toLowerCase(), "i") }
+         }, 'cityID cityName countryCode', {limit: 10}, function(err, doc) {
             if (err) return console.error(err);
             if (doc) {
                 var foundCities = doc;

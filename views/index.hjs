@@ -48,12 +48,11 @@
                     <h1 class="cover-heading">Welcome to {{title}}.</h1>
                     <p class="lead">{{title}} provides you with the weather plain, simple and beautiful. Um...{{title}}?</p>
                     <p class="lead">
-                        <form id="joinUser" class="form-inline">
-                            <div class="form-group">
-                                <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
-                                <a class="btn btn-default" id="citySearchBtn">Search</a>
+                            <div id="findCity" class="form-inline">
+                                <div class="form-group">
+                                    <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
+                                </div>
                             </div>
-                        </form>
                     </p>
                     <div id="cityResults" class="list-group">
                     </div>
@@ -77,27 +76,23 @@
     <script src="/javascripts/jquery-2.1.1.min.js"></script>
     <script src="/javascripts/knockout-3.2.0.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/typeahead.js"></script>
     <script>
 
-    $('#citySearch').keyup(function(e){
-        var enteredText = $('#citySearch').val();
-        // console.log(enteredText);
-        if ( (enteredText !== "") && (enteredText.length >= 3) ) {
-            $.get("findCity/"+ enteredText, function(data) {
-                // console.log(data);
+    $('#citySearch').typeahead({
+        source: function(query, process) {
+            $.get("findCity/"+ query, function(data) {
                 if (data) {
-                    $("#cityResults").html(""); //TODO: .clear() instead
-                    for (i = 0; i < data.length; i++) {
-                        $("#cityResults").append(
-                            "<a href='weather/" + data[i].cityID + "' class='list-group-item'>" +
-                            data[i].cityName + " - " +
-                            data[i].countryCode + "</a>"
-                        );
-                    }
+                    return process(data);
                 }
             });
-        } else {
-            $("#cityResults").html("");
+        },
+        minLength: 3,
+        displayText: function(item) {
+            return item.cityName + " - " + item.countryCode;
+        },
+        afterSelect: function(item) {
+            window.location.href = "weather/" + item.cityID;
         }
     });
 
