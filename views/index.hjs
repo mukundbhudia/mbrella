@@ -50,7 +50,7 @@
                     <p class="lead">
                             <div id="findCity" class="form-inline">
                                 <div class="form-group">
-                                    <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
+                                    <input type="text" class="typeahead citySearch-lg form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
                                 </div>
                             </div>
                     </p>
@@ -77,25 +77,6 @@
     <script src="/javascripts/knockout-3.2.0.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
     <script src="/javascripts/typeahead.js"></script>
-    <script>
-
-    $('#citySearch').typeahead({
-        source: function(query, process) {
-            $.get("findCity/"+ query, function(data) {
-                if (data) {
-                    return process(data);
-                }
-            });
-        },
-        minLength: 3,
-        displayText: function(item) {
-            return item.cityName + " - " + item.countryCode;
-        },
-        afterSelect: function(item) {
-            window.location.href = "weather/" + item.cityID;
-        }
-    });
-
-    </script>
+    <script src="/javascripts/typeaheadSettings.js"></script>
 </body>
 </html>

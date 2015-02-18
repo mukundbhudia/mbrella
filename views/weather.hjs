@@ -37,6 +37,13 @@
                         <h3 class="masthead-brand">{{title}}</h3>
                         <nav>
                             <ul class="nav masthead-nav">
+                                <li>
+                                    <div id="findCity" class="form-inline">
+                                        <div class="form-group">
+                                            <input type="text" class="typeahead form-control citySearch-sm input-sm" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
+                                        </div>
+                                    </div>
+                                </li>
                                 <li class="active"><a href="/">Home</a></li>
                                 <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
                             </ul>
@@ -117,6 +124,8 @@
     <script src="/javascripts/jquery-2.1.1.min.js"></script>
     <script src="/javascripts/knockout-3.2.0.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/typeahead.js"></script>
+    <script src="/javascripts/typeaheadSettings.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAUb2FVPgPIAaDqtF0gC0j4Km5xwU8d1w"></script>
     <script type="text/javascript">
     function initialize() {

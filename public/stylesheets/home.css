@@ -7,11 +7,6 @@
 	margin-bottom: 20px;
 }*/
 
-#cityResults {
-	max-height: 206px;
-	overflow: scroll;
-}
-
 #map-canvas {
 	height: 250px;
 	width: 100%;
@@ -31,8 +26,12 @@ div.progress{
 	margin-bottom: 0px;
 }
 
-#citySearch {
+input#citySearch.typeahead.citySearch-lg {
 	width: 300px;
+}
+
+input#citySearch.typeahead.citySearchMini-sm {
+	width: 180px;
 }
 
 div#mainWeatherRow {
