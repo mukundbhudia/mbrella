@@ -3,9 +3,9 @@ var router = express.Router();
 var User = require('../models/User');
 
 /* GET users listing. */
-router.get('/:userID', function(req, res) {
+router.get('/', function(req, res) {
     var sess = req.session;
-    var userID = req.params.userID;
+    var userID = sess.userID;
     if (sess.useremail) {
         User.findById(userID, function(err, doc) {
             if (err) return console.error(err);
@@ -36,8 +36,8 @@ router.post('/', function(req, res) {
 
     User.findByIdAndUpdate(userID, userToUpdate, function(err, doc) {
         if (err) return console.error(err); //TODO: if doc?
-        res.location('/user/' + userID + "?updated=true");
-        res.redirect('/user/' + userID + "?updated=true");
+        res.location("/user?updated=true");
+        res.redirect("/user?updated=true");
     });
 });
 

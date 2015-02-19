@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res) {
     var sess = req.session;
     if (sess.useremail) {
-        res.render('index', { title: 'Brella', userEmail: sess.useremail, personalURL: 'user/' + sess.userID, personalMessage: sess.userfirstname + "'s weather" });
+        res.render('index', { title: 'Brella', userEmail: sess.useremail, personalURL: 'user', personalMessage: sess.userfirstname + "'s weather" });
     } else {
         res.render('index', { title: 'Brella', personalURL: 'login', personalMessage: 'Log in' });
     }
