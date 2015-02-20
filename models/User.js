@@ -1,12 +1,14 @@
 /* User model. */
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
 var userSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     email: String,
-    password: String
+    password: String,
+    favCities: [{type: Schema.Types.ObjectId, ref: 'City'}]
 });
 
 //TODO: Consider using a virtual instead of function?

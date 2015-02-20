@@ -7,7 +7,8 @@ router.get('/', function(req, res) {
     var sess = req.session;
     var userID = sess.userID;
     if (sess.useremail) {
-        User.findById(userID, function(err, doc) {
+        //If the user has logged on we find their details and their corresponding favorite cities
+        User.findById(userID).populate('favCities').exec(function(err, doc) {
             if (err) return console.error(err);
             res.render('user', doc);
         });
@@ -26,12 +27,19 @@ router.post('/', function(req, res) {
     var userLastName = req.body.userlastname;
     var userEmail = req.body.useremail;
     var userPassword = req.body.userpassword;
+    var usersCities = req.body.usersCitiesToAdd;
+
+    var citiesToAddArray =[];   //The users favourite cities
+    if (usersCities) {
+        citiesToAddArray = JSON.parse(usersCities).cities;
+    }
 
     var userToUpdate = {
         firstName: userFirstName,
         lastName: userLastName,
         email: userEmail,
-        password: userPassword
+        password: userPassword,
+        favCities: citiesToAddArray
     };
 
     User.findByIdAndUpdate(userID, userToUpdate, function(err, doc) {
