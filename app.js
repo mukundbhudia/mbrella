@@ -11,6 +11,7 @@ var lib = require('./lib');
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var login = require('./routes/login');
+var logout = require('./routes/logout');
 var signup = require('./routes/signup');
 var findCity = require('./routes/findCity');
 var weather = require('./routes/weather');
@@ -39,6 +40,7 @@ app.use(session({
 app.use('/', routes);
 app.use('/user', user);
 app.use('/login', login);
+app.use('/logout', logout);
 app.use('/signup', signup);
 app.use('/findCity', findCity);
 app.use('/getWeather', getWeather);
