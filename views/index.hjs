@@ -63,7 +63,9 @@
 
                 <div class="mastfoot">
                     <div class="inner">
+                        {{^userEmail}}
                         <p><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
+                        {{/userEmail}}
                     </div>
                 </div>
 

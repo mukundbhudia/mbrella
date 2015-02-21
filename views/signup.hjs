@@ -36,8 +36,10 @@
                 </label>
             </div>
             <button id="sendBtn" class="btn btn-lg btn-primary btn-block" type="submit">Sign up!</button>
+            <div class="userOptions">
+                <p>Aleady a user? <a href="/login">Login instead</a>.</p>
+            </div>
         </form>
-
     </div> <!-- /container -->
 </body>
 </html>

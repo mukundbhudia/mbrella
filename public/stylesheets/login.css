@@ -46,3 +46,7 @@ body {
 .form-signin-status label {
     font-weight: normal;
 }
+
+.userOptions{
+    margin-top: 20px;
+}
