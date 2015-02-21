@@ -105,8 +105,6 @@
                         </tbody>
                     </table>
                     <div id="map-canvas"></div>
-                    <div id="cityResults" class="list-group">
-                    </div>
                 </div>
 
                 <div class="">

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>The weather for {{cityName}}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/home.css" rel="stylesheet">
+    <link href="/stylesheets/cover.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="site-wrapper">
+
+        <div class="site-wrapper-inner">
+
+            <div class="cover-container">
+
+                <div class="clearfix">
+                    <div class="inner">
+                        <h3 class="masthead-brand">{{title}}</h3>
+                        <nav>
+                            <ul class="nav masthead-nav">
+                                <li>
+                                    <div id="findCity" class="form-inline">
+                                        <div class="form-group">
+                                            <input type="text" class="typeahead form-control citySearch-sm input-sm" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="active"><a href="/">Home</a></li>
+                                <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
+                                {{#userEmail}}
+                                <li><a href="/logout">Logout</a></li>
+                                {{/userEmail}}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="inner cover">
+                    <h2 class="cover-heading">Your weather.</h2>
+                    <div class="row">
+                        {{#favCities}}
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><a href="/weather/{{cityID}}">{{cityName}}</a></div>
+                                <div id="wContent-{{cityID}}" class="panel-body">
+                                </div>
+                            </div>
+                        </div>
+                        {{/favCities}}
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="inner">
+                        {{^userEmail}}
+                        <p><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
+                        {{/userEmail}}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script src="/javascripts/knockout-3.2.0.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/typeahead.js"></script>
+    <script src="/javascripts/typeaheadSettings.js"></script>
+    <script>
+
+    var favCities = [{{#favCities}}"{{cityID}}",{{/favCities}}];
+    var favWeatherArray = [];
+
+    function populateFavWeather(cityID) {
+        $.get("/getWeather/" + cityID, function(data) {
+            if (data) {
+                favWeatherArray.push(data);
+                $("#wContent-" + cityID).html(
+                    data.weather[0].main + " "
+                    + Math.ceil(data.main.temp - 273.15) + "&deg;C"
+                    + "<img width='50px' src='/images/weatherIcons/" + data.weather[0].icon + ".png'></img>"
+                );
+            } else {
+                console.error("No data weather obtained");
+            }
+        });
+    }
+
+    for (var i = 0; i < favCities.length; i++) {
+        populateFavWeather(favCities[i]);
+    }
+
+    </script>
+</body>
+</html>

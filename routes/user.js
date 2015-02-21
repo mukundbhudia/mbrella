@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
             if (err) return console.error(err);
             var userInfo = doc;
             userInfo.userEmail = sess.useremail;
-            res.render('user', doc);
+            res.render('user', userInfo);
         });
     } else {
         res.location('/login');

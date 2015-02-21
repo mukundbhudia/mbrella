@@ -15,6 +15,7 @@ var logout = require('./routes/logout');
 var signup = require('./routes/signup');
 var findCity = require('./routes/findCity');
 var weather = require('./routes/weather');
+var myweather = require('./routes/myweather');
 var getWeather = require('./routes/getWeather');
 
 var app = express();
@@ -45,6 +46,7 @@ app.use('/signup', signup);
 app.use('/findCity', findCity);
 app.use('/getWeather', getWeather);
 app.use('/weather', weather);
+app.use('/myweather', myweather);
 
 var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/brella'
 

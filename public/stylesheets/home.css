@@ -55,3 +55,12 @@ img#wIcon {
 	filter: brightness(4.5);
 	-webkit-filter: brightness(4.5);
 }
+
+div.panel.panel-default{
+	background-color: transparent;
+}
+
+div.panel-default > div.panel-heading{
+	background-color: #463465;
+	color: #FFF;
+}
