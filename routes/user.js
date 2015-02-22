@@ -10,9 +10,14 @@ router.get('/', function(req, res) {
         //If the user has logged on we find their details and their corresponding favorite cities
         User.findById(userID).populate('favCities').exec(function(err, doc) {
             if (err) return console.error(err);
-            var userInfo = doc;
-            userInfo.userEmail = sess.useremail;
-            res.render('user', userInfo);
+            var options = {
+                path: 'favCities.country',
+                model: 'Country'
+            };
+            User.populate(doc, options, function(err, userInfo){
+                res.render('user', userInfo);
+            });
+
         });
     } else {
         res.location('/login');

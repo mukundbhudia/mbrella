@@ -43,7 +43,7 @@ var getAndSaveWeather = function(cityID, callback) {
     in the db.
 */
 
-var populateCityData = function() {
+var populateCityData = function(countryCodes) {
 
     City.find().count(function (err, count) {
         if (err) return console.error(err);
@@ -67,15 +67,28 @@ var populateCityData = function() {
                     //...ends one item before to ignore blank space in text file
                     for (i = 1; i < (cityArray.length - 1); i++) {
                         var cityLine = cityArray[i].split("\t");    // split up each line...
-                        var cityToSave = {                          // ...to form JSON
-                            cityID: parseInt(cityLine[0]),
-                            cityName: cityLine[1],
-                            latitude: parseFloat(cityLine[2]),
-                            longtitude: parseFloat(cityLine[3]),
-                            countryCode: cityLine[4],
-                            __v : 0
-                        };
-                        cities.push(cityToSave);
+                        var codeToFind = cityLine[4];
+                        var foundCode = false;
+                        var j = 0;
+                        //We next go through the DB country codes until we find one or run out of items
+                        while ((j < countryCodes.length) && !foundCode) {
+                            if (codeToFind === countryCodes[j].countryCode) {
+                                foundCode = true;
+                                var cityToSave = {                          // ...to form JSON
+                                    cityID: parseInt(cityLine[0]),
+                                    cityName: cityLine[1],
+                                    latitude: parseFloat(cityLine[2]),
+                                    longtitude: parseFloat(cityLine[3]),
+                                    country: countryCodes[j]._id,
+                                    __v : 0
+                                };
+                                cities.push(cityToSave);
+                            }
+                            j++;
+                        }
+                        if (!foundCode) {
+                            console.log("\tCity " + cityLine[1] + " (" + codeToFind + ") not found in database city codes");
+                        }
                     }
                     //Batch insert the array of JSON objects
                     City.collection.insert(cities, function(err, doc) {
@@ -133,12 +146,12 @@ var compareCountryCodes =  function(countryCodes, countryCodesFromCities, callba
 */
 
 var checkCountryData = function() {
-    var keysFileName = "./data/slim-2.json"      //The name of the 2 char country code JSON file
+    var countryCodeFile = "./data/slim-2.json"      //The name of the 2 char country code JSON file
     fs = require('fs');
-    fs.readFile(keysFileName, 'utf8', function (err, data) {
+    fs.readFile(countryCodeFile, 'utf8', function (err, data) {
 
         if (err && (err.errno == 34)) {         //34 is file not found error
-            return console.log("country file '" + keysFileName + "' not found.");
+            return console.log("country file '" + countryCodeFile + "' not found.");
 
         } else if (err && (err.errno != 34)) {  //Another file error has occured
             return console.log(err);
@@ -146,15 +159,15 @@ var checkCountryData = function() {
         } else {
             try {
                 var countryCodes = JSON.parse(data);   //Attempt to Parse as JSON
-                console.log("Country file '" + keysFileName + "' found and loaded. Attempting DB checks...");
-                City.find().distinct('countryCode', function(error, codes) {
+                console.log("Country file '" + countryCodeFile + "' found and loaded. Attempting DB checks...");
+                City.find().distinct('country', function(error, codes) {
                     var countryCodesFromCities = codes;
                     console.log("Distinct codes from cities: " + countryCodesFromCities.length + "\n");
                     //For all the country codes we have from the list of cities we compare that
                     //with the list of codes from file
-                    compareCountryCodes(countryCodes, countryCodesFromCities, function(deadCodes){
-                        console.log("\n" + deadCodes.length + " country codes missing from API and not in the database.");
-                    });
+                    // compareCountryCodes(countryCodes, countryCodesFromCities, function(deadCodes){
+                    //     console.log("\n" + deadCodes.length + " country codes missing from API and not in the database.");
+                    // });
                 });
                 Country.find().count(function (err, count) {    //Check how many countries are in the db
                     if (err) return console.error(err);
@@ -171,6 +184,7 @@ var checkCountryData = function() {
                         }
                         Country.collection.insert(countriesToAdd, function(err, doc) {
                             if (err) return console.error(err);
+                            populateCityData(doc);
                             console.log(countriesToAdd.length + " countries saved to database.");
                         });
                     } else {
@@ -181,7 +195,7 @@ var checkCountryData = function() {
 
             } catch (error) {
                 console.error(error);
-                return console.error("country file '" + keysFileName + "' found but is not in JSON form");
+                return console.error("country file '" + countryCodeFile + "' found but is not in JSON form");
             }
         }
     });

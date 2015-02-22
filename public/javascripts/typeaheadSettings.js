@@ -11,7 +11,7 @@ $('#citySearch').typeahead({
     },
     minLength: 3,
     displayText: function(item) {
-        return item.cityName + " - " + item.countryCode;
+        return item.cityName + " - " + item.country.countryName;
     },
     afterSelect: function(item) {
         window.location.href = "/weather/" + item.cityID;

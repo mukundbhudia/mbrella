@@ -58,7 +58,7 @@ mongoose.connect(mongoURI, function(err){
     }
 });
 
-lib.populateCityData();
+// lib.populateCityData();
 lib.checkCountryData();
 
 // catch 404 and forward to error handler
