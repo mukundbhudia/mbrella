@@ -187,6 +187,8 @@
             $("#wSunset").text(getDate(data.sys.sunset));
             $("#wIcon").attr('src',"/images/weatherIcons/" + data.weather[0].icon + ".png");
             console.log("wind chill:" + getWindChill((data.main.temp - 273.15), data.wind.speed));
+        } else {
+            console.error("Unable to get weather data.");
         }
     });
 

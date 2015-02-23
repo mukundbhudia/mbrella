@@ -24,15 +24,25 @@ router.get('/:cityID', function(req, res) {
                 res.json(dbWeather);
             } else {
                 console.log("\tWeather data older than 10 mins, obtaining from API...");
-                lib.getAndSaveWeather(cityID, function(weather) {   //ask library to access API
-                    res.json(weather);
+                lib.getAndSaveWeather(cityID, function(err, weather) {   //ask library to access API
+                    if (weather) {
+                        res.json(weather);
+                    } else if (err) {
+                        console.error(err);
+                        res.status(500).json({ error: 'Cannot connect to API' });
+                    }
                 });
             }
         } else {
             //If no weather document for the city ID parameter is found, the API is accessed
             console.log("\tWeather data not in DB, obtaining from API...");
-            lib.getAndSaveWeather(cityID, function(weather) {
-                res.json(weather);
+            lib.getAndSaveWeather(cityID, function(err, weather) {
+                if (weather) {
+                    res.json(weather);
+                } else if (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 'Cannot connect to API' });
+                }
             });
         }
     });

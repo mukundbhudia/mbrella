@@ -12,26 +12,38 @@ var Weather = require('./models/Weather');
 */
 var getAndSaveWeather = function(cityID, callback) {
     http.get("http://api.openweathermap.org/data/2.5/weather?id=" + cityID, function(getRes) {
-        console.log("Got response: " + getRes.statusCode + " collecting weather data...");
+        console.log("...got response: " + getRes.statusCode + " collecting weather data...");
         //Build up the data from the HTTP GET request using the body variable (as it is streamed)
         var body = "";
         getRes.on('data', function(data) {
             body += data.toString();    //accumulate text buffer as string
         });
         getRes.on('end', function () {     //action after data transmission
-            var currentWeather = JSON.parse(body);  //TODO: try/catch here? body could be malformed
-            weatherToSave = new Weather(currentWeather);
-            //Perfrom save to db
-            weatherToSave.save(function (err, data) {
-                if (err) return console.error(err);
-                console.log("Weather data for " + currentWeather.name +
-                " with ID: " + currentWeather.id + " saved.");
-            });
-            //Return the weather to callback function
-            callback && callback(currentWeather);
+            var currentWeather = null;
+            try {   //Try and catch as http get data could be malformed
+                currentWeather = JSON.parse(body)
+            } catch (error) {
+                console.error(error);
+                callback && callback("Weather data for city ID: " + cityID +
+                " not in JSON form.", null);
+            }
+            if (currentWeather) {
+                weatherToSave = new Weather(currentWeather);
+                //Perfrom save to db
+                weatherToSave.save(function(err, data) {
+                    if (err) return console.error(err);
+                    console.log("Weather data for " + currentWeather.name +
+                    " with ID: " + currentWeather.id + " saved.");
+                });
+                //Return the weather to callback function
+                callback && callback(null, currentWeather);
+            } else {
+                callback && callback("Weather data for city ID: " + cityID +
+                " not in JSON form.", null);
+            }
         });
     }).on('error', function(e) {
-        console.log("Got error: " + e.message);
+        callback && callback("HTTP error accessing OWM API: " + e.message, null);
     });
 }
 
