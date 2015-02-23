@@ -8,7 +8,6 @@ router.get('/:cityID', function(req, res) {
     var cityID = req.params.cityID;
     City.findOne({cityID: cityID}).populate('country').exec(function(err, citydoc) {
         if (citydoc) {
-            console.log(citydoc);
             var sess = req.session;
             var weatherToSend = {
                 title: "Brella",

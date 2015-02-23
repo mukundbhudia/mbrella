@@ -48,7 +48,7 @@ app.use('/getWeather', getWeather);
 app.use('/weather', weather);
 app.use('/myweather', myweather);
 
-var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/brella'
+var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/brella';
 
 mongoose.connect(mongoURI, function(err){
     if (err) {
@@ -58,7 +58,6 @@ mongoose.connect(mongoURI, function(err){
     }
 });
 
-// lib.populateCityData();
 lib.checkCountryData();
 
 // catch 404 and forward to error handler
