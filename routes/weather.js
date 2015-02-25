@@ -19,7 +19,7 @@ router.get('/:cityID', function(req, res) {
                 longtitude: citydoc.longtitude
             };
             if (sess.useremail) {
-                weatherToSend.userEmail = sess.useremail;
+                weatherToSend.userEmail = sess.userEmail;
                 weatherToSend.personalURL = 'user';
                 weatherToSend.personalMessage = sess.userfirstname + "'s weather";
             } else {

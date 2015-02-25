@@ -39,7 +39,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use('/', routes);
-app.use('/user', user);
+app.use('/myweather/user', user);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/signup', signup);

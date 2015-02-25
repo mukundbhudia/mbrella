@@ -15,7 +15,6 @@
 
     <!-- Custom styles for this template -->
     <link href="/stylesheets/home.css" rel="stylesheet">
-    <link href="/stylesheets/cover.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -26,100 +25,126 @@
 
 <body>
 
-    <div class="site-wrapper">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-purp navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">{{title}}</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- {{#userEmail}}
+                    <li><a href="/logout">Logout {{firstName}}</a></li>
+                    {{/userEmail}} -->
+                    <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
+                </ul>
+                <div class="navbar-form navbar-right">
+                    <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
+                </div>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
 
-        <div class="site-wrapper-inner">
 
-            <div class="cover-container">
+    <div class="container">
 
-                <div class="clearfix">
-                    <div class="inner">
-                        <h3 class="masthead-brand">{{title}}</h3>
-                        <nav>
-                            <ul class="nav masthead-nav">
-                                <li>
-                                    <div id="findCity" class="form-inline">
-                                        <div class="form-group">
-                                            <input type="text" class="typeahead form-control citySearch-sm input-sm" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="active"><a href="/">Home</a></li>
-                                <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
-                                {{#userEmail}}
-                                <li><a href="/logout">Logout</a></li>
-                                {{/userEmail}}
-                            </ul>
-                        </nav>
+        <h2 class="cover-heading">{{cityName}} - {{countryName}}</h2>
+        <div class="row">
+
+            <div class="col-md-8">
+
+                <div id="mainWeatherRow" class="row">
+                    <div class="col-md-4">
+                        <div id="weatherIconContainer">
+                            <img id="wIcon" src="" alt="">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="mainWeatherInfo">
+                            <div id="wTemp"></div>
+                            <p id="wDesc" class="lead"></p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="inner cover">
-                    <h2 class="cover-heading">{{cityName}} - {{countryName}}</h2>
-                    <div id="mainWeatherRow" class="row">
-
-                        <div class="col-md-4">
-                            <div id="weatherIconContainer">
-                                <img id="wIcon" src="" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div id="mainWeatherInfo">
-                                <div id="wTemp"></div>
-                                <p id="wDesc" class="lead"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <table id="weatherDataTable" class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th id="feildCol">Feild</th>
-                                <th id="statsCol">Stats</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Cloud cover</th>
-                                <td id="wCloud"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Wind (speed | direction)</th>
-                                <td id="wWind"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Pressure</th>
-                                <td id="wPressure"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Humidity</th>
-                                <td id="wHumidity"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Sunrise</th>
-                                <td id="wSunrise"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Sunset</th>
-                                <td id="wSunset"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div id="map-canvas"></div>
-                </div>
-
-                <div class="">
-                    <div class="inner">
-                        {{^userEmail}}
-                        <p><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
-                        {{/userEmail}}
-                    </div>
+                <div class="row">
+                    <!-- <div class="col-md-8"> -->
+                        <table id="weatherDataTable" class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th id="feildCol">Feild</th>
+                                    <th id="statsCol">Stats</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Cloud cover</th>
+                                    <td id="wCloud"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Wind (speed | direction)</th>
+                                    <td id="wWind"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Pressure</th>
+                                    <td id="wPressure"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Humidity</th>
+                                    <td id="wHumidity"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Sunrise</th>
+                                    <td id="wSunrise"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Sunset</th>
+                                    <td id="wSunset"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <!-- </div> -->
                 </div>
 
             </div>
 
+            <div class="col-md-4">
+                <div id="map-canvas"></div>
+            </div>
+
         </div>
 
-    </div>
+
+
+
+    </div> <!-- /container -->
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">Brella</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

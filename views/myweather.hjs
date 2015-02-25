@@ -8,14 +8,13 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>The weather for {{cityName}}</title>
+    <title>{{firstName}}'s weather</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/stylesheets/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="/stylesheets/home.css" rel="stylesheet">
-    <link href="/stylesheets/cover.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -26,62 +25,75 @@
 
 <body>
 
-    <div class="site-wrapper">
-
-        <div class="site-wrapper-inner">
-
-            <div class="cover-container">
-
-                <div class="clearfix">
-                    <div class="inner">
-                        <h3 class="masthead-brand">{{title}}</h3>
-                        <nav>
-                            <ul class="nav masthead-nav">
-                                <li>
-                                    <div id="findCity" class="form-inline">
-                                        <div class="form-group">
-                                            <input type="text" class="typeahead form-control citySearch-sm input-sm" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="active"><a href="/">Home</a></li>
-                                <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
-                                {{#userEmail}}
-                                <li><a href="/logout">Logout</a></li>
-                                {{/userEmail}}
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-
-                <div class="inner cover">
-                    <h2 class="cover-heading">Your weather.</h2>
-                    <div class="row">
-                        {{#favCities}}
-                        <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><a href="/weather/{{cityID}}">{{cityName}}</a></div>
-                                <div id="wContent-{{cityID}}" class="panel-body">
-                                </div>
-                            </div>
-                        </div>
-                        {{/favCities}}
-                    </div>
-                </div>
-
-                <div class="">
-                    <div class="inner">
-                        {{^userEmail}}
-                        <p><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
-                        {{/userEmail}}
-                    </div>
-                </div>
-
+    <!-- Static navbar -->
+    <nav class="navbar navbar-purp navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">{{title}}</a>
             </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {{#userEmail}}
+                    <li><a href="/myweather/user">Your settings</a></li>
+                    <li><a href="/logout">Logout {{firstName}}</a></li>
+                    {{/userEmail}}
+                </ul>
+                <div class="navbar-form navbar-right">
+                    <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
+                </div>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
 
+
+    <div class="container">
+
+        <!-- Main component for a primary marketing message or call to action -->
+        <h2>Your weather.</h2>
+        <hr>
+        <div class="row">
+            {{#favCities}}
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><a href="/weather/{{cityID}}">{{cityName}}</a></div>
+                    <div id="wContent-{{cityID}}" class="panel-body">
+                    </div>
+                </div>
+            </div>
+            {{/favCities}}
         </div>
 
-    </div>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">Brella</p>
+            {{^userEmail}}
+            <p class="text-muted"><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
+            {{/userEmail}}
+        </div>
+    </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

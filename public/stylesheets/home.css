@@ -1,14 +1,20 @@
-/*body {
-	padding-top: 20px;
-	padding-bottom: 20px;
+html {
+	position: relative;
+	min-height: 100%;
 }
 
-.navbar {
-	margin-bottom: 20px;
+body {
+	margin-bottom: 60px;
+	background-color: #70628d;
+	color:#fff;
+}
+
+/*.navbar {
+margin-bottom: 20px;
 }*/
 
 #map-canvas {
-	height: 250px;
+	height: 400px;
 	width: 100%;
 	margin: 0;
 	padding: 0;
@@ -27,7 +33,7 @@ div.progress{
 }
 
 input#citySearch.typeahead.citySearch-lg {
-	width: 300px;
+	width: 280px;
 }
 
 input#citySearch.typeahead.citySearchMini-sm {
@@ -56,11 +62,90 @@ img#wIcon {
 	-webkit-filter: brightness(4.5);
 }
 
+.navbar-purp {
+	background-color: #554471;
+	border-color: #272139;
+	border-bottom-width: 1.25px;
+}
+.navbar-purp .navbar-brand {
+	color: #fff; /* IE8 proofing */
+	color: rgba(255,255,255,.75);
+}
+.navbar-purp .navbar-brand:hover,
+.navbar-purp .navbar-brand:focus {
+	color: #fff;
+	background-color: transparent;
+}
+.navbar-purp .navbar-text {
+	color: #fff; /* IE8 proofing */
+	color: rgba(255,255,255,.75);
+}
+.navbar-purp .navbar-nav > li > a {
+	color: #fff; /* IE8 proofing */
+	color: rgba(255,255,255,.75);
+}
+.navbar-purp .navbar-nav > li > a:hover,
+.navbar-purp .navbar-nav > li > a:focus {
+	color: #fff;
+	background-color: transparent;
+}
+.navbar-purp .navbar-nav > .active > a,
+.navbar-purp .navbar-nav > .active > a:hover,
+.navbar-purp .navbar-nav > .active > a:focus {
+	color: #fff;
+	background-color: #342a46;
+}
+.navbar-purp .navbar-nav > .disabled > a,
+.navbar-purp .navbar-nav > .disabled > a:hover,
+.navbar-purp .navbar-nav > .disabled > a:focus {
+	color: #444;
+	background-color: transparent;
+}
+.navbar-purp .navbar-toggle {
+	border-color: #333;
+}
+.navbar-purp .navbar-toggle:hover,
+.navbar-purp .navbar-toggle:focus {
+	background-color: #333;
+}
+.navbar-purp .navbar-toggle .icon-bar {
+	background-color: #fff;
+}
+.navbar-purp .navbar-collapse,
+.navbar-purp .navbar-form {
+	border-color: #101010;
+}
+.navbar-purp .navbar-nav > .open > a,
+.navbar-purp .navbar-nav > .open > a:hover,
+.navbar-purp .navbar-nav > .open > a:focus {
+	color: #fff;
+	background-color: #342a46;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 60px;
+	background-color: #342b46;
+}
+
+.container .text-muted {
+	margin: 20px 0px;
+}
+
+/*TODO: new panel style here*/
 div.panel.panel-default{
 	background-color: transparent;
 }
 
 div.panel-default > div.panel-heading{
-	background-color: #463465;
-	color: #FFF;
+	background-color: #5a5274;
+}
+
+div.panel-default > div.panel-heading,
+div.panel-default > div.panel-heading > a,
+div.panel-default > div.panel-heading > a:hover,
+div.panel-default > div.panel-heading > a:focus {
+	color: #fff;
 }

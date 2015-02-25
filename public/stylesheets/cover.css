@@ -73,6 +73,7 @@ body {
 .masthead-nav > li + li {
     margin-left: 20px;
 }
+.masthead-nav > div.dropdown > li.dropdown-toggle > a,
 .masthead-nav > li > a {
     padding-right: 0;
     padding-left: 0;
@@ -93,6 +94,12 @@ body {
 .masthead-nav > .active > a:focus {
     color: #fff;
     border-bottom-color: #fff;
+}
+
+.masthead-nav > div.dropdown {
+    position: relative;
+    padding: 10px 15px;
+    display: inline-block;
 }
 
 @media (min-width: 768px) {
