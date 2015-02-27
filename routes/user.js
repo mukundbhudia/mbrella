@@ -15,6 +15,7 @@ router.get('/', function(req, res) {
                 model: 'Country'
             };
             User.populate(doc, options, function(err, userInfo){
+                userInfo.title = "Brella";
                 res.render('user', userInfo);
             });
 

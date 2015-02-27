@@ -38,9 +38,25 @@
                         <nav>
                             <ul class="nav masthead-nav">
                                 <li class="active"><a href="/">Home</a></li>
-                                <li><a href="/{{personalURL}}">{{personalMessage}}</a></li>
+                                {{^userEmail}}
+                                <li><a href="/signup">Sign up</a></li>
+                                <li><a href="/login">Login</a></li>
+                                {{/userEmail}}
                                 {{#userEmail}}
-                                <li><a href="/logout">Logout</a></li>
+                                <div class="dropdown">
+                                    <li class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                        <a href="#">
+                                            {{personalMessage}}
+                                            <span class="caret"></span>
+                                        </a>
+                                    </li>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation"><a role="menuitem" href="/myweather">My Weather</a></li>
+                                        <li role="presentation"><a role="menuitem" href="/myweather/user">Settings</a></li>
+                                        <li class="divider"></li>
+                                        <li role="presentation"><a role="menuitem" href="/logout">Logout</a></li>
+                                    </ul>
+                                </div>
                                 {{/userEmail}}
                             </ul>
                         </nav>
@@ -51,11 +67,11 @@
                     <h1 class="cover-heading">Welcome to {{title}}.</h1>
                     <p class="lead">{{title}} provides you with the weather plain, simple and beautiful. Um...{{title}}?</p>
                     <p class="lead">
-                            <div id="findCity" class="form-inline">
-                                <div class="form-group">
-                                    <input type="text" class="typeahead citySearch-lg form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
-                                </div>
+                        <div id="findCity" class="form-inline">
+                            <div class="form-group">
+                                <input type="text" class="typeahead citySearch-lg form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
                             </div>
+                        </div>
                     </p>
                     <div id="cityResults" class="list-group">
                     </div>

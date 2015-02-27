@@ -14,17 +14,13 @@ router.get('/:cityID', function(req, res) {
                 cityID : cityID,
                 cityName: citydoc.cityName,
                 countryName: citydoc.country.countryName,
-                countryCode: citydoc.countryCode,
+                countryCode: citydoc.country.countryCode,
                 latitude: citydoc.latitude,
                 longtitude: citydoc.longtitude
             };
             if (sess.useremail) {
-                weatherToSend.userEmail = sess.userEmail;
-                weatherToSend.personalURL = 'user';
-                weatherToSend.personalMessage = sess.userfirstname + "'s weather";
-            } else {
-                weatherToSend.personalURL = 'login';
-                weatherToSend.personalMessage = "Log in";
+                weatherToSend.userEmail = sess.useremail;
+                weatherToSend.firstName = sess.userfirstname;
             }
             res.render('weather', weatherToSend);
         } else {
