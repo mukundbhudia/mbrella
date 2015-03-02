@@ -1,18 +1,26 @@
 var express = require('express');
 var router = express.Router();
+var url = require("url");
 var User = require('../models/User');
 
 /* GET signup page. */
 router.get('/', function(req, res) {
-  res.render('signup', { title: 'Brella' });
+    //Get the page the user was previously on
+    var backURL = req.header('Referer') || '/';
+    var backURLpathname = url.parse(backURL).pathname;
+    //Sign up login page including URL path the user was previously on
+    res.render('signup', { title: 'Brella', backPath: backURLpathname });
 });
 
 /* POST signup page. */
 router.post('/', function(req, res) {
+    var sess = req.session;
+
     var userFirstName = req.body.userfirstname;
     var userLastName = req.body.userlastname;
     var userEmail = req.body.useremail;
     var userPassword = req.body.userpassword;
+    var backPath = req.body.backPath;   //the URL path the user was on prior to logging in
 
     var userToSignup = new User({
         firstName: userFirstName,
@@ -34,8 +42,11 @@ router.post('/', function(req, res) {
                 userToSignup.save(function (err, userToSignup) {
                     if (err) return console.error(err);
                     console.log("User: " + userToSignup.getFullName() + " with email: " + userEmail + ' has signed up.');
-                    res.location('/');
-                    res.redirect('/');
+                    sess.useremail = userToSignup.email;
+                    sess.userfirstname = userToSignup.firstName;
+                    sess.userID = userToSignup._id;
+                    res.location(backPath); //Send user back to where they were
+                    res.redirect(backPath);
                 });
             }
         });

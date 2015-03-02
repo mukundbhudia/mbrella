@@ -52,8 +52,8 @@ router.post('/', function(req, res) {
 
     User.findByIdAndUpdate(userID, userToUpdate, function(err, doc) {
         if (err) return console.error(err); //TODO: if doc?
-        res.location("/user?updated=true");
-        res.redirect("/user?updated=true");
+        res.location("/myweather/user?updated=true");
+        res.redirect("/myweather/user?updated=true");
     });
 });
 
