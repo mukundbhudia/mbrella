@@ -14,7 +14,14 @@
 <body>
 
     <div class="container">
-        <div>{{loginInfo}}</div>
+        <div id="messagesContainer">
+            {{#loginInfo}}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Erm...</strong> {{loginInfo}}
+            </div>
+            {{/loginInfo}}
+        </div>
         <form class="form-signin" role="form" id="loginForm" method="post" action="/login">
             <h2 class="form-signin-heading">Please sign in</h2>
 
@@ -38,5 +45,8 @@
             </div>
         </form>
     </div> <!-- /container -->
+
+    <script src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
 </body>
 </html>

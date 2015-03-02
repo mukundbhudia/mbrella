@@ -5,11 +5,19 @@ var User = require('../models/User');
 
 /* GET login page. */
 router.get('/', function(req, res) {
+    var sess = req.session;
     //Get the page the user was previously on
     var backURL = req.header('Referer') || '/';
     var backURLpathname = url.parse(backURL).pathname;
-    //Render login page including URL path the user was previously on
-    res.render('login', { title: 'Brella', backPath: backURLpathname });
+    //Check if user is logged in already
+    if (sess.useremail) {
+        console.log("User already logged in, redirecting");
+        res.location("/myweather"); //Send user to the homepage as they are already logged in
+        res.redirect("/myweather");
+    } else {
+        //Render login page including URL path the user was previously on
+        res.render('login', { title: 'Brella', backPath: backURLpathname });
+    }
 });
 
 /* GET login page. */
@@ -32,7 +40,10 @@ router.post('/', function(req, res) {
             }
         } else {
             console.log("unsuccessful login, sending back to login page...");
-            res.render('login', { title: 'Brella', loginInfo: 'Incorrect email or password' });
+            res.render('login', {
+                title: 'Brella',
+                loginInfo: 'Incorrect email or password, please try again.' 
+            });
         }
     });
 });

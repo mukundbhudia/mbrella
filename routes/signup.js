@@ -5,11 +5,19 @@ var User = require('../models/User');
 
 /* GET signup page. */
 router.get('/', function(req, res) {
+    var sess = req.session;
     //Get the page the user was previously on
     var backURL = req.header('Referer') || '/';
     var backURLpathname = url.parse(backURL).pathname;
-    //Sign up login page including URL path the user was previously on
-    res.render('signup', { title: 'Brella', backPath: backURLpathname });
+    //Check if user is logged in already
+    if (sess.useremail) {
+        console.log("User already logged in, redirecting");
+        res.location("/myweather"); //Send user to the homepage as they are already logged in
+        res.redirect("/myweather");
+    } else {
+        //Sign up login page including URL path the user was previously on
+        res.render('signup', { title: 'Brella', backPath: backURLpathname });
+    }
 });
 
 /* POST signup page. */
@@ -35,13 +43,19 @@ router.post('/', function(req, res) {
             if (doc[0]) {   //If a result exists then the correct user has logged in
                 var foundUser = doc[0].toObject(); //Need to convert to JSON object
                 if (doc.length === 1 && userEmail === foundUser.email) {
-                    res.render('signup', { title: 'Brella', signUpInfo: 'The email address ' + userEmail + ' is already taken, please try again.' });
-                    console.log("Sign up unsuccessful, user: " + userEmail + " already exists. Sending back to sign up page...");
+                    res.render('signup', {
+                        title: 'Brella',
+                        signUpInfo: 'The email address ' +
+                        userEmail + ' is already taken, please try again.'
+                    });
+                    console.log("Sign up unsuccessful, user: " +
+                    userEmail + " already exists. Sending back to sign up page...");
                 }
             } else {
                 userToSignup.save(function (err, userToSignup) {
                     if (err) return console.error(err);
-                    console.log("User: " + userToSignup.getFullName() + " with email: " + userEmail + ' has signed up.');
+                    console.log("User: " + userToSignup.getFullName() +
+                    " with email: " + userEmail + ' has signed up.');
                     sess.useremail = userToSignup.email;
                     sess.userfirstname = userToSignup.firstName;
                     sess.userID = userToSignup._id;
@@ -52,7 +66,7 @@ router.post('/', function(req, res) {
         });
 
     } else {
-        res.render('signup', { title: 'Node Chat', signUpInfo: 'Please fill out all data' });
+        res.render('signup', { title: 'Brella', signUpInfo: 'Please fill out all data' });
     }
 });
 

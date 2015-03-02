@@ -28,13 +28,17 @@ body {
 .form-signin .form-control:focus {
     z-index: 2;
 }
+
+div#passwordForm.input-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 .form-signin input[type="email"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
 .form-signin input[type="password"] {
-    margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
@@ -47,6 +51,13 @@ body {
     font-weight: normal;
 }
 
-.userOptions{
+.userOptions {
     margin-top: 20px;
+}
+
+div.alert {
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
 }
