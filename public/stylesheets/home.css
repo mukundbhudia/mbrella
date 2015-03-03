@@ -149,3 +149,13 @@ div.panel-default > div.panel-heading > a:hover,
 div.panel-default > div.panel-heading > a:focus {
 	color: #fff;
 }
+
+a#errorBackLink {
+    color: #fff;
+}
+
+a#errorBackLink:hover,
+a#errorBackLink:focus {
+    color: #fff;
+    text-decoration: underline;
+}
