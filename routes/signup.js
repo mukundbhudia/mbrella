@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var url = require("url");
 var User = require('../models/User');
+var auth = require('../auth');
 
 /* GET signup page. */
 router.get('/', function(req, res) {
@@ -33,8 +34,7 @@ router.post('/', function(req, res) {
     var userToSignup = new User({
         firstName: userFirstName,
         lastName: userLastName,
-        email: userEmail,
-        password: userPassword
+        email: userEmail
     });
 
     if (userFirstName && userLastName && userPassword && userEmail) {
@@ -52,15 +52,18 @@ router.post('/', function(req, res) {
                     userEmail + " already exists. Sending back to sign up page...");
                 }
             } else {
-                userToSignup.save(function (err, userToSignup) {
-                    if (err) return console.error(err);
-                    console.log("User: " + userToSignup.getFullName() +
-                    " with email: " + userEmail + ' has signed up.');
-                    sess.useremail = userToSignup.email;
-                    sess.userfirstname = userToSignup.firstName;
-                    sess.userID = userToSignup._id;
-                    res.location(backPath); //Send user back to where they were
-                    res.redirect(backPath);
+                auth.generatePassword(userPassword, function(hashedPassword){
+                    userToSignup.password = hashedPassword;
+                    userToSignup.save(function (err, userToSignup) {
+                        if (err) return console.error(err);
+                        console.log("User: " + userToSignup.getFullName() +
+                        " with email: " + userEmail + ' has signed up.');
+                        sess.useremail = userToSignup.email;
+                        sess.userfirstname = userToSignup.firstName;
+                        sess.userID = userToSignup._id;
+                        res.location(backPath); //Send user back to where they were
+                        res.redirect(backPath);
+                    });
                 });
             }
         });

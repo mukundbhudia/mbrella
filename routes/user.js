@@ -34,7 +34,6 @@ router.post('/', function(req, res) {
     var userFirstName = req.body.userfirstname;
     var userLastName = req.body.userlastname;
     var userEmail = req.body.useremail;
-    var userPassword = req.body.userpassword;
     var usersCities = req.body.usersCitiesToAdd;
 
     var citiesToAddArray =[];   //The users favourite cities
@@ -46,7 +45,6 @@ router.post('/', function(req, res) {
         firstName: userFirstName,
         lastName: userLastName,
         email: userEmail,
-        password: userPassword,
         favCities: citiesToAddArray
     };
 
