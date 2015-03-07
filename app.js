@@ -17,6 +17,7 @@ var findCity = require('./routes/findCity');
 var weather = require('./routes/weather');
 var myweather = require('./routes/myweather');
 var getWeather = require('./routes/getWeather');
+var changePassword = require('./routes/changePassword');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use('/', routes);
+app.use('/myweather/user/changepassword', changePassword);
 app.use('/myweather/user', user);
 app.use('/login', login);
 app.use('/logout', logout);

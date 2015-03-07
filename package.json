@@ -1,6 +1,6 @@
 {
     "name": "brella",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "A simple weather app",
     "author": "Mukund Bhudia <mukund.bhudia@hotmail.co.uk>",
     "private": true,
