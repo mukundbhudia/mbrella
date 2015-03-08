@@ -16,8 +16,8 @@ router.get('/', function(req, res) {
             res.render('myweather', userInfo);
         });
     } else {
-        res.location('/login');
-        res.redirect('/login');
+        res.location('/login?return=' + req.originalUrl);
+        res.redirect('/login?return=' + req.originalUrl);
     }
 });
 

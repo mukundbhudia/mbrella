@@ -15,8 +15,8 @@ router.get('/', function(req, res) {
             res.render('changePassword', userInfo);
         });
     } else {    //Otherwise we ask them to login
-        res.location('/login');
-        res.redirect('/login');
+        res.location('/login?return=' + req.originalUrl);
+        res.redirect('/login?return=' + req.originalUrl);
     }
 });
 

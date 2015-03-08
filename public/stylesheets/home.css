@@ -9,6 +9,16 @@ body {
 	color:#fff;
 }
 
+a {
+    color: #D4D0DB;
+}
+
+a:hover,
+a:focus {
+    color: #fff;
+    text-decoration: underline;
+}
+
 /*.navbar {
 margin-bottom: 20px;
 }*/
@@ -148,14 +158,4 @@ div.panel-default > div.panel-heading > a,
 div.panel-default > div.panel-heading > a:hover,
 div.panel-default > div.panel-heading > a:focus {
 	color: #fff;
-}
-
-a#errorBackLink {
-    color: #fff;
-}
-
-a#errorBackLink:hover,
-a#errorBackLink:focus {
-    color: #fff;
-    text-decoration: underline;
 }

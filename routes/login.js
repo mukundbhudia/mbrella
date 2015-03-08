@@ -8,8 +8,7 @@ var auth = require('../auth');
 router.get('/', function(req, res) {
     var sess = req.session;
     //Get the page the user was previously on
-    var backURL = req.header('Referer') || '/';
-    var backURLpathname = url.parse(backURL).pathname;
+    var backURL = req.query.return || '/';
     //Check if user is logged in already
     if (sess.useremail) {
         console.log("User already logged in, redirecting");
@@ -17,7 +16,7 @@ router.get('/', function(req, res) {
         res.redirect("/myweather");
     } else {
         //Render login page including URL path the user was previously on
-        res.render('login', { title: 'Brella', backPath: backURLpathname });
+        res.render('login', { title: 'Brella', backPath: backURL });
     }
 });
 
