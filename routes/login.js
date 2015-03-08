@@ -8,7 +8,7 @@ var auth = require('../auth');
 router.get('/', function(req, res) {
     var sess = req.session;
     //Get the page the user was previously on
-    var backURL = req.query.return || '/';
+    var backURL = req.query.return || url.parse(req.header('Referer')).pathname || '/';
     //Check if user is logged in already
     if (sess.useremail) {
         console.log("User already logged in, redirecting");
