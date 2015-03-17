@@ -57,7 +57,7 @@
         </form>
     </div> <!-- /container -->
 
-    <script src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
     <script>
 

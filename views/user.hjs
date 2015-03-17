@@ -131,7 +131,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/knockout.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
     <script src="/javascripts/typeahead.js"></script>
