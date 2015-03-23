@@ -10,7 +10,7 @@ router.get('/:cityID', function(req, res) {
         if (citydoc) {
             var sess = req.session;
             var weatherToSend = {
-                title: "Brella",
+                title: "mbrella",
                 cityID : cityID,
                 cityName: citydoc.cityName,
                 countryName: citydoc.country.countryName,

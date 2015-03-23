@@ -16,7 +16,7 @@ router.get('/', function(req, res) {
         res.redirect("/myweather");
     } else {
         //Render login page including URL path the user was previously on
-        res.render('login', { title: 'Brella', backPath: backURL });
+        res.render('login', { title: 'mbrella', backPath: backURL });
     }
 });
 
@@ -46,7 +46,7 @@ router.post('/', function(req, res) {
                         console.log("unsuccessful login (wrong password for user)," +
                         " sending back to login page...");
                         res.render('login', {
-                            title: 'Brella',
+                            title: 'mbrella',
                             loginInfo: 'Incorrect password, please try again.'
                         });
                     }
@@ -61,7 +61,7 @@ router.post('/', function(req, res) {
         } else { //No user matches the db query using the given email address
             console.log("unsuccessful login (user not exist), sending back to login page...");
             res.render('login', {
-                title: 'Brella',
+                title: 'mbrella',
                 loginInfo: "The given email does not exist in our records, please " +
                  " check the email address and try again."
             });

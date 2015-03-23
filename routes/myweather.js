@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
             if (err) return console.error(err);
             var userInfo = doc;
             userInfo.userEmail = sess.useremail;
-            userInfo.title = "Brella";
+            userInfo.title = "mbrella";
             res.render('myweather', userInfo);
         });
     } else {

@@ -5,9 +5,9 @@ var router = express.Router();
 router.get('/', function(req, res) {
     var sess = req.session;
     if (sess.useremail) {
-        res.render('index', { title: 'Brella', userEmail: sess.useremail, personalURL: 'myweather', personalMessage: sess.userfirstname });
+        res.render('index', { title: 'mbrella', userEmail: sess.useremail, personalURL: 'myweather', personalMessage: sess.userfirstname });
     } else {
-        res.render('index', { title: 'Brella', personalURL: 'login', personalMessage: 'Log in' });
+        res.render('index', { title: 'mbrella', personalURL: 'login', personalMessage: 'Log in' });
     }
 });
 

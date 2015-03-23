@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
         //If the user has logged on we find their details and their corresponding favorite cities
         User.findById(userID, function(err, userInfo) {
             if (err) return console.error(err);
-            userInfo.title = "Brella";
+            userInfo.title = "mbrella";
             res.render('changePassword', userInfo);
         });
     } else {    //Otherwise we ask them to login
@@ -43,7 +43,7 @@ router.post('/', function(req, res) {
                         " changed successfully.");
                         //We notify the user the password has been changed
                         res.render('changePassword', {
-                            title: "brella",
+                            title: "mbrella",
                             firstName: doc.firstName,
                             info: "Password changed successfully."
                         });
@@ -53,7 +53,7 @@ router.post('/', function(req, res) {
                 console.log("Password for user " + doc.email + " not changed. " +
                 "Old password does not match database.");
                 res.render('changePassword', {
-                    title: "brella",
+                    title: "mbrella",
                     firstName: doc.firstName,
                     error: "The old password entered was incorrect, please try again."
                 });

@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
         res.redirect("/myweather");
     } else {
         //Sign up login page including URL path the user was previously on
-        res.render('signup', { title: 'Brella', backPath: backURLpathname });
+        res.render('signup', { title: 'mbrella', backPath: backURLpathname });
     }
 });
 
@@ -44,7 +44,7 @@ router.post('/', function(req, res) {
                 var foundUser = doc[0].toObject(); //Need to convert to JSON object
                 if (doc.length === 1 && userEmail === foundUser.email) {
                     res.render('signup', {
-                        title: 'Brella',
+                        title: 'mbrella',
                         signUpInfo: 'The email address ' +
                         userEmail + ' is already taken, please try again.'
                     });
@@ -69,7 +69,7 @@ router.post('/', function(req, res) {
         });
 
     } else {
-        res.render('signup', { title: 'Brella', signUpInfo: 'Please fill out all data' });
+        res.render('signup', { title: 'mbrella', signUpInfo: 'Please fill out all data' });
     }
 });
 

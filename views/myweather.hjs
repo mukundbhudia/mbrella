@@ -86,7 +86,7 @@
 
     <footer class="footer">
         <div class="container">
-            <p class="text-muted">Brella</p>
+            <p class="text-muted">mbrella</p>
             {{^userEmail}}
             <p class="text-muted"><a href="/login">Log in</a> or <a href="/signup">sign up</a> to get started.</p>
             {{/userEmail}}

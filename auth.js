@@ -1,4 +1,4 @@
-//Authentication functions for Brella
+//Authentication functions for mbrella
 
 var bcrypt = require('bcrypt');
 

@@ -1,4 +1,4 @@
-//Library functions for Brella
+//Library functions for mbrella
 
 var http = require('http');
 var City = require('./models/City');
@@ -21,7 +21,7 @@ var getAndSaveWeather = function(cityID, callback) {
         getRes.on('end', function () {     //action after data transmission
             var currentWeather = null;
             try {   //Try and catch as http get data could be malformed
-                currentWeather = JSON.parse(body)
+                currentWeather = JSON.parse(body);
             } catch (error) {
                 console.error(error);
                 callback && callback("Weather data for city ID: " + cityID +
@@ -45,7 +45,7 @@ var getAndSaveWeather = function(cityID, callback) {
     }).on('error', function(e) {
         callback && callback("HTTP error accessing OWM API: " + e.message, null);
     });
-}
+};
 
 
 /*
@@ -55,7 +55,7 @@ var getAndSaveWeather = function(cityID, callback) {
     correct country can be assigned to the corresponding city.
 */
 var checkCountryData = function() {
-    var countryCodeFile = "./data/slim-2.json"      //The name of the 2 char country code JSON file
+    var countryCodeFile = "./data/slim-2.json";      //The name of the 2 char country code JSON file
     fs = require('fs');
     fs.readFile(countryCodeFile, 'utf8', function (err, data) {
 
@@ -124,7 +124,7 @@ var populateCountryData = function(countryCodes, callback) {
                 countryCode : countryCodes[i]["alpha-2"],
                 countryName : countryCodes[i].name,
                 __v : 0
-            }
+            };
             countriesToAdd.push(countryToAdd);
         }
         //Adding Kosovo which is not part of ISO 3166 standard alpha-2 codes
@@ -133,7 +133,7 @@ var populateCountryData = function(countryCodes, callback) {
             countryCode : 'XK', //user assigned country code
             countryName : 'Kosovo',
             __v : 0
-        }
+        };
         countriesToAdd.push(kosovo);
         //Return collated country codes as a callback
         callback && callback(countriesToAdd);
@@ -186,7 +186,7 @@ var populateCityData = function(countryCodes, countryCodesFromFile) {
             console.log("Cities found in database, skipping city retrival");
         }
     });
-}
+};
 
 /*
     Uses OWM city text file as an array of strings goes through each line to
@@ -282,10 +282,10 @@ var compareCountryCodes = function(countryCodesFile) {
             }
         });
     });
-}
+};
 
 //Functions used outside this library are exported below
 module.exports = {
     getAndSaveWeather: getAndSaveWeather,
     checkCountryData: checkCountryData
-}
+};
