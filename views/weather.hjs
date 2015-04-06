@@ -222,7 +222,7 @@
                     if (data) {
                         //TODO: Max and min temps shown elsewhere
                         self.cityName(data.name);
-                        self.countryName(data.sys.country);
+                        self.countryName(data.sys.country.countryName);
                         self.temp(data.main.temp);
                         self.icon(data.weather[0].icon);
                         self.weatherSmallDesc(data.weather[0].main);

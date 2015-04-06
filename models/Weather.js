@@ -1,6 +1,7 @@
 /* Weather model (data set by Open Weather Map). */
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
 var weatherSchema = mongoose.Schema({
     dateret: { type: Date, default: Date.now },
@@ -8,7 +9,7 @@ var weatherSchema = mongoose.Schema({
         lon: Number, lat: Number},
         sys: {
             message: Number,
-            country: String,
+            country: {type: Schema.Types.ObjectId, ref: 'Country'},
             sunrise: Number,
             sunset: Number
         },

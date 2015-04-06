@@ -8,7 +8,8 @@ var lib = require('../lib');
 router.get('/:cityID', function(req, res) {
     var cityID = req.params.cityID;
     //We get the most recent weather data document by city ID parameter
-    Weather.find({id: cityID}).sort({dateret: "descending"}).limit(1).exec(function(err, data) {
+    Weather.find({id: cityID}).sort({dateret: "descending"})
+    .limit(1).populate('sys.country').exec(function(err, data) {
         if (err) return console.error(err);
         //Check if data is returned and is not empty
         if (data && (data.length > 0) ) {

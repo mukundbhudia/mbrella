@@ -28,15 +28,23 @@ var getAndSaveWeather = function(cityID, callback) {
                 " not in JSON form.", null);
             }
             if (currentWeather) {
-                weatherToSave = new Weather(currentWeather);
-                //Perfrom save to db
-                weatherToSave.save(function(err, data) {
-                    if (err) return console.error(err);
-                    console.log("Weather data for " + currentWeather.name +
-                    " with ID: " + currentWeather.id + " saved.");
+                var weatherToSaveCountry = currentWeather.sys.country;
+                var foundCountryData = null;
+                Country.findOne({ countryCode: weatherToSaveCountry }, function(err, country) {
+                    foundCountryData = country;
+                    currentWeather.sys.country = country._id;
+                    weatherToSave = new Weather(currentWeather);
+                    //Perfrom save to db
+                    weatherToSave.save(function(err, data) {
+                        currentWeather = data;
+                        currentWeather.sys.country = foundCountryData;
+                        if (err) return console.error(err);
+                        console.log("Weather data for " + currentWeather.name +
+                        " with ID: " + currentWeather.id + " saved.");
+                        //Return the weather to callback function
+                        callback && callback(null, currentWeather);
+                    });
                 });
-                //Return the weather to callback function
-                callback && callback(null, currentWeather);
             } else {
                 callback && callback("Weather data for city ID: " + cityID +
                 " not in JSON form.", null);
