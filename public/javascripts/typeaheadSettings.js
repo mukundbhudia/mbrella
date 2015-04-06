@@ -14,6 +14,7 @@ $('#citySearch').typeahead({
         return item.cityName + " - " + item.country.countryName;
     },
     afterSelect: function(item) {
-        window.location.href = "/weather/" + item.cityID;
+        $('#citySearch').val("");
+        window.location.href = "/weather/#/" + item.cityID;
     }
 });

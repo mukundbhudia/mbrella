@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>The weather for {{cityName}}</title>
+    <title data-bind="text: cityName"></title>
 
     <!-- Bootstrap core CSS -->
     <link href="/stylesheets/bootstrap.css" rel="stylesheet">
@@ -68,7 +68,7 @@
 
     <div class="container">
 
-        <h2 class="cover-heading">{{cityName}} - {{countryName}}</h2>
+        <h2 data-bind="text: cityName() + ' - ' + countryName()" class="cover-heading"></h2>
         <div class="row">
 
             <div class="col-md-8">
@@ -76,53 +76,63 @@
                 <div id="mainWeatherRow" class="row">
                     <div class="col-md-4">
                         <div id="weatherIconContainer">
-                            <img id="wIcon" src="" alt="">
+                            <img data-bind="attr: { src: weatherIcon }" id="wIcon" src="" alt="">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div id="mainWeatherInfo">
-                            <div id="wTemp"></div>
-                            <p id="wDesc" class="lead"></p>
+                            <div data-bind="text: tempInDeg() + '&deg;C'" id="wTemp"></div>
+                            <p data-bind="text: weatherSmallDesc() + ' - ' + weatherLargeDesc()" id="wDesc" class="lead"></p>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <!-- <div class="col-md-8"> -->
-                        <table id="weatherDataTable" class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th id="feildCol">Feild</th>
-                                    <th id="statsCol">Stats</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Cloud cover</th>
-                                    <td id="wCloud"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Wind (speed | direction)</th>
-                                    <td id="wWind"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Pressure</th>
-                                    <td id="wPressure"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Humidity</th>
-                                    <td id="wHumidity"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Sunrise</th>
-                                    <td id="wSunrise"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Sunset</th>
-                                    <td id="wSunset"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <table id="weatherDataTable" class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th id="feildCol">Feild</th>
+                                <th id="statsCol">Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Cloud cover</th>
+                                <td id="wCloud">
+                                    <div class='progress'>
+                                        <div data-bind="text: cloudCover() + '%', style: {width: cloudCover() + '%'}" class='progress-bar progress-bar-success' role='progressbar' aria-valuemin='0' aria-valuemax='100'>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Wind (speed | direction)</th>
+                                <td data-bind="text: windInfo() + '&deg;'" id="wWind"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Pressure</th>
+                                <td data-bind="text: pressure() + ' mb'" id="wPressure"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Humidity</th>
+                                <td id="wHumidity">
+                                    <div class='progress'>
+                                        <div data-bind="text: humidity() + '%', style: {width: humidity() + '%'}" class='progress-bar' role='progressbar' aria-valuemin='0' aria-valuemax='100'>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sunrise</th>
+                                <td data-bind="text: sunrise" id="wSunrise"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sunset</th>
+                                <td data-bind="text: sunset" id="wSunset"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <!-- </div> -->
                 </div>
 
@@ -155,26 +165,12 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/knockout.js"></script>
+    <script src="/javascripts/sammy-latest.min.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
     <script src="/javascripts/typeahead.js"></script>
     <script src="/javascripts/typeaheadSettings.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAUb2FVPgPIAaDqtF0gC0j4Km5xwU8d1w"></script>
     <script type="text/javascript">
-    function initialize() {
-        var cityLatlng = new google.maps.LatLng({{latitude}}, {{longtitude}});
-        var mapOptions = {
-            center: cityLatlng,
-            zoom: 8,
-            draggable: false
-        };
-        var map = new google.maps.Map(document.getElementById('map-canvas'),
-        mapOptions);
-        var marker = new google.maps.Marker({
-            position: cityLatlng,
-            map: map,
-            title: 'City'
-        });
-    }
 
     function getDate(unixUTC) {
         var date = new Date(parseInt(unixUTC)*1000);
@@ -188,38 +184,85 @@
         return 13.12 + 0.6215*temp + ((windSpeed*3.6)^(0.16))*(0.3965*temp - 11.37);
     }
 
-    google.maps.event.addDomListener(window, 'load', initialize);
+    function WeatherViewModel() {
+        var self = this;
+        self.weatherCityId = ko.observable();
+        self.cityName = ko.observable();
+        self.countryName = ko.observable();
+        self.icon = ko.observable();
+        self.temp = ko.observable();
+        self.weatherSmallDesc = ko.observable();
+        self.weatherLargeDesc = ko.observable();
+        self.cloudCover = ko.observable();
+        self.windSpeed = ko.observable();
+        self.windDirection = ko.observable();
+        self.pressure = ko.observable();
+        self.humidity = ko.observable();
+        self.sunrise = ko.observable();
+        self.sunset = ko.observable();
+        self.latitude = ko.observable();
+        self.longtitude = ko.observable();
 
-    $.get("/getWeather/{{cityID}}", function(data) {
-        if (data) {
-            $("#wDesc","#wTemp","#wTemp_max","#wTemp_min","#wCloud",
-            "#wWind","#wPressure","#wHumidity","#wSunrise","#wSunset").empty();
+        self.tempInDeg = ko.computed(function() {
+            return Math.ceil(self.temp() - 273.15);
+        });
 
-            $("#wDesc").text(data.weather[0].main + " - " + data.weather[0].description);
-            $("#wTemp").html(Math.ceil(data.main.temp - 273.15) + "&deg;C");
-            //TODO: Max and min temps shown elsewhere
-            // $("#wTemp_max").html(Math.ceil(data.main.temp_max - 273.15) + "&deg;C");
-            // $("#wTemp_min").html(Math.ceil(data.main.temp_min - 273.15) + "&deg;C");
-            $("#wCloud").html(
-                "<div class='progress'><div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='" +
-                data.clouds.all +"' aria-valuemin='0' aria-valuemax='100' style='width: " + data.clouds.all +"%;'>" +
-                data.clouds.all +"%</div></div>"
-            );
-            $("#wWind").text(data.wind.speed + " mps | " + data.wind.deg);
-            $("#wPressure").text(data.main.pressure + " mb");
-            $("#wHumidity").html(
-                "<div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='" +
-                data.main.humidity +"' aria-valuemin='0' aria-valuemax='100' style='width: " +
-                data.main.humidity +"%;'>" + data.main.humidity +"%</div></div>"
-            );
-            $("#wSunrise").text(getDate(data.sys.sunrise));
-            $("#wSunset").text(getDate(data.sys.sunset));
-            $("#wIcon").attr('src',"/images/weatherIcons/" + data.weather[0].icon + ".png");
-            console.log("wind chill:" + getWindChill((data.main.temp - 273.15), data.wind.speed));
-        } else {
-            console.error("Unable to get weather data.");
-        }
-    });
+        self.weatherIcon = ko.computed(function() {
+            return "/images/weatherIcons/" + self.icon() + ".png";
+        });
+
+        self.windInfo = ko.computed(function() {
+            return self.windSpeed() + " mps | " + self.windDirection();
+        });
+
+        Sammy(function() {
+            this.get('/#/:cityId', function() {
+                self.weatherCityId(this.params.cityId);
+                $.getJSON("/getWeather/" + this.params.cityId, function(data) {
+                    if (data) {
+                        //TODO: Max and min temps shown elsewhere
+                        self.cityName(data.name);
+                        self.countryName(data.sys.country);
+                        self.temp(data.main.temp);
+                        self.icon(data.weather[0].icon);
+                        self.weatherSmallDesc(data.weather[0].main);
+                        self.weatherLargeDesc(data.weather[0].description);
+                        self.cloudCover(data.clouds.all);
+                        self.windSpeed(data.wind.speed);
+                        self.windDirection(data.wind.deg);
+                        self.pressure(data.main.pressure);
+                        self.humidity(data.main.humidity);
+                        self.sunrise(getDate(data.sys.sunrise));
+                        self.sunset(getDate(data.sys.sunset));
+                        self.longtitude(data.coord.lon);
+                        self.latitude(data.coord.lat);
+                        gMapInitialize();
+                    } else {
+                        console.error("HTTP GET error: Unable to get weather data.");
+                    }
+                });
+            });
+        }).run();
+    }
+
+    var wvm = new WeatherViewModel();
+    ko.applyBindings(wvm);
+
+    function gMapInitialize() {
+        var cityLatlng = new google.maps.LatLng(wvm.latitude(), wvm.longtitude());
+        var mapOptions = {
+            center: cityLatlng,
+            zoom: 8,
+            draggable: false
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+        mapOptions);
+        var marker = new google.maps.Marker({
+            position: cityLatlng,
+            map: map,
+            title: 'City'
+        });
+    }
 
     </script>
 </body>
