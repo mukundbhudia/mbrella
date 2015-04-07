@@ -85,6 +85,12 @@
                             <p data-bind="text: weatherSmallDesc() + ' - ' + weatherLargeDesc()" id="wDesc" class="lead"></p>
                         </div>
                     </div>
+                    <div class="pull-right">
+                        <button onclick="getWeatherData()" data-toggle="tooltip" data-placement="bottom" title="Refresh weather" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
+                        <p data-bind="text: weatherTimeStamp"></p>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -180,6 +186,20 @@
         return hours + ':' + minutes + " GMT";
     }
 
+    function getTimeZoneDate(ISOdate) {
+        var dateAccessed = new Date(ISOdate);
+        var tOff = dateAccessed.getTimezoneOffset();
+        var tExpansion = 0;
+        if (tOff < 0) {
+            tExpansion = dateAccessed.getTime() +
+            Math.abs(dateAccessed.getTimezoneOffset())*60000;
+        } else {
+            tExpansion = dateAccessed.getTime() -
+            Math.abs(dateAccessed.getTimezoneOffset())*60000;
+        }
+        return new Date(tExpansion);
+    }
+
     function getWindChill(temp, windSpeed){
         return 13.12 + 0.6215*temp + ((windSpeed*3.6)^(0.16))*(0.3965*temp - 11.37);
     }
@@ -188,6 +208,7 @@
         var self = this;
         self.weatherCityId = ko.observable();
         self.cityName = ko.observable();
+        self.dateAccessed = ko.observable();
         self.countryName = ko.observable();
         self.icon = ko.observable();
         self.temp = ko.observable();
@@ -202,6 +223,11 @@
         self.sunset = ko.observable();
         self.latitude = ko.observable();
         self.longtitude = ko.observable();
+
+        self.weatherTimeStamp = ko.computed(function(){
+            var dateAccessed = new Date(self.dateAccessed());
+            return dateAccessed.getHours() + ":" + dateAccessed.getMinutes();
+        });
 
         self.tempInDeg = ko.computed(function() {
             return Math.ceil(self.temp() - 273.15);
@@ -218,29 +244,7 @@
         Sammy(function() {
             this.get('/#/:cityId', function() {
                 self.weatherCityId(this.params.cityId);
-                $.getJSON("/getWeather/" + this.params.cityId, function(data) {
-                    if (data) {
-                        //TODO: Max and min temps shown elsewhere
-                        self.cityName(data.name);
-                        self.countryName(data.sys.country.countryName);
-                        self.temp(data.main.temp);
-                        self.icon(data.weather[0].icon);
-                        self.weatherSmallDesc(data.weather[0].main);
-                        self.weatherLargeDesc(data.weather[0].description);
-                        self.cloudCover(data.clouds.all);
-                        self.windSpeed(data.wind.speed);
-                        self.windDirection(data.wind.deg);
-                        self.pressure(data.main.pressure);
-                        self.humidity(data.main.humidity);
-                        self.sunrise(getDate(data.sys.sunrise));
-                        self.sunset(getDate(data.sys.sunset));
-                        self.longtitude(data.coord.lon);
-                        self.latitude(data.coord.lat);
-                        gMapInitialize();
-                    } else {
-                        console.error("HTTP GET error: Unable to get weather data.");
-                    }
-                });
+                getWeatherData(this.params.cityId);
             });
         }).run();
     }
@@ -248,8 +252,46 @@
     var wvm = new WeatherViewModel();
     ko.applyBindings(wvm);
 
-    function gMapInitialize() {
-        var cityLatlng = new google.maps.LatLng(wvm.latitude(), wvm.longtitude());
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    function getWeatherData(cityId) {
+        var cityIdToGet = cityId || wvm.weatherCityId();
+        $.getJSON("/getWeather/" + cityIdToGet, function(data) {
+            if (data) {
+                var dateAccessesd = getTimeZoneDate(data.dateret);
+                console.log("Weather data for " + data.name + " accessed at " +
+                dateAccessesd.toUTCString());
+
+                if (data.dateret !== wvm.dateAccessed()) {
+                    console.log("Weather data has changed, updating UI...");
+                    //TODO: Max and min temps shown elsewhere
+                    wvm.dateAccessed(data.dateret);
+                    wvm.cityName(data.name);
+                    wvm.countryName(data.sys.country.countryName);
+                    wvm.temp(data.main.temp);
+                    wvm.icon(data.weather[0].icon);
+                    wvm.weatherSmallDesc(data.weather[0].main);
+                    wvm.weatherLargeDesc(data.weather[0].description);
+                    wvm.cloudCover(data.clouds.all);
+                    wvm.windSpeed(data.wind.speed);
+                    wvm.windDirection(data.wind.deg);
+                    wvm.pressure(data.main.pressure);
+                    wvm.humidity(data.main.humidity);
+                    wvm.sunrise(getDate(data.sys.sunrise));
+                    wvm.sunset(getDate(data.sys.sunset));
+                    gMapInitialize(data.coord.lat, data.coord.lon);
+                }
+
+            } else {
+                console.error("HTTP GET error: Unable to get weather data.");
+            }
+        });
+    }
+
+    function gMapInitialize(lat, lon) {
+        var cityLatlng = new google.maps.LatLng(lat, lon);
         var mapOptions = {
             center: cityLatlng,
             zoom: 8,

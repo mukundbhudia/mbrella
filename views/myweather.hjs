@@ -74,7 +74,7 @@
             {{#favCities}}
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><a href="/weather/{{cityID}}">{{cityName}}</a></div>
+                    <div class="panel-heading"><a href="/weather/#/{{cityID}}">{{cityName}}</a></div>
                     <div id="wContent-{{cityID}}" class="panel-body">
                     </div>
                 </div>
