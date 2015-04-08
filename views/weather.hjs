@@ -65,7 +65,6 @@
         </div>
     </nav>
 
-
     <div class="container">
 
         <h2 data-bind="text: cityName() + ' - ' + countryName()" class="cover-heading"></h2>
@@ -89,7 +88,7 @@
                         <button onclick="getWeatherData()" data-toggle="tooltip" data-placement="bottom" title="Refresh weather" type="button" class="btn btn-default">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                         </button>
-                        <p data-bind="text: weatherTimeStamp"></p>
+                        <p>Last updated: <span data-bind="text: weatherTimeStamp"></span></p>
                     </div>
                 </div>
 
@@ -150,9 +149,6 @@
 
         </div>
 
-
-
-
     </div> <!-- /container -->
 
     <footer class="footer">
@@ -178,31 +174,8 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAUb2FVPgPIAaDqtF0gC0j4Km5xwU8d1w"></script>
     <script type="text/javascript">
 
-    function getDate(unixUTC) {
-        var date = new Date(parseInt(unixUTC)*1000);
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var seconds = date.getSeconds();
-        return hours + ':' + minutes + " GMT";
-    }
-
-    function getTimeZoneDate(ISOdate) {
-        var dateAccessed = new Date(ISOdate);
-        var tOff = dateAccessed.getTimezoneOffset();
-        var tExpansion = 0;
-        if (tOff < 0) {
-            tExpansion = dateAccessed.getTime() +
-            Math.abs(dateAccessed.getTimezoneOffset())*60000;
-        } else {
-            tExpansion = dateAccessed.getTime() -
-            Math.abs(dateAccessed.getTimezoneOffset())*60000;
-        }
-        return new Date(tExpansion);
-    }
-
-    function getWindChill(temp, windSpeed){
-        return 13.12 + 0.6215*temp + ((windSpeed*3.6)^(0.16))*(0.3965*temp - 11.37);
-    }
+    var fiveMinsInMilliseconds = 300000;
+    var oneMinInMilliseconds = 60000;
 
     function WeatherViewModel() {
         var self = this;
@@ -242,9 +215,14 @@
         });
 
         Sammy(function() {
+            var refreshWeather = null;
             this.get('/#/:cityId', function() {
                 self.weatherCityId(this.params.cityId);
+                if (refreshWeather) {
+                    clearInterval(refreshWeather);
+                }
                 getWeatherData(this.params.cityId);
+                refreshWeather = setInterval(getWeatherData, fiveMinsInMilliseconds);
             });
         }).run();
     }
@@ -282,12 +260,40 @@
                     wvm.sunrise(getDate(data.sys.sunrise));
                     wvm.sunset(getDate(data.sys.sunset));
                     gMapInitialize(data.coord.lat, data.coord.lon);
+                } else {
+                    console.log("Weather data unchanged, skipping UI updating.");
                 }
 
             } else {
                 console.error("HTTP GET error: Unable to get weather data.");
             }
         });
+    }
+
+    function getDate(unixUTC) {
+        var date = new Date(parseInt(unixUTC)*1000);
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        return hours + ':' + minutes + " GMT";
+    }
+
+    function getTimeZoneDate(ISOdate) {
+        var givenDate = new Date(ISOdate);
+        var givenDateOffset = givenDate.getTimezoneOffset();
+        var dateExpandedWithOffset = 0;
+        if (givenDateOffset < 0) {
+            dateExpandedWithOffset = givenDate.getTime() +
+            Math.abs(givenDate.getTimezoneOffset())*oneMinInMilliseconds;
+        } else {
+            dateExpandedWithOffset = givenDate.getTime() -
+            Math.abs(givenDate.getTimezoneOffset())*oneMinInMilliseconds;
+        }
+        return new Date(dateExpandedWithOffset);
+    }
+
+    function getWindChill(temp, windSpeed){
+        return 13.12 + 0.6215*temp + ((windSpeed*3.6)^(0.16))*(0.3965*temp - 11.37);
     }
 
     function gMapInitialize(lat, lon) {
