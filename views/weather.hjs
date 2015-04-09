@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html id="html-all" lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title data-bind="text: cityName"></title>
+    <title data-bind="text: 'The weather in ' + cityName()"></title>
 
     <!-- Bootstrap core CSS -->
     <link href="/stylesheets/bootstrap.css" rel="stylesheet">
@@ -65,7 +65,11 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div data-bind="visible: weatherCityId() == null" class="container">
+        <h3>Enter a city in the search bar above to find the weather...</h3>
+    </div>
+
+    <div data-bind="visible: weatherCityId" class="container">
 
         <h2 data-bind="text: cityName() + ' - ' + countryName()" class="cover-heading"></h2>
         <div class="row">
@@ -97,7 +101,7 @@
                     <table id="weatherDataTable" class="table table-condensed">
                         <thead>
                             <tr>
-                                <th id="feildCol">Feild</th>
+                                <th id="feildCol">Field</th>
                                 <th id="statsCol">Stats</th>
                             </tr>
                         </thead>
@@ -224,11 +228,15 @@
                 getWeatherData(this.params.cityId);
                 refreshWeather = setInterval(getWeatherData, fiveMinsInMilliseconds);
             });
+            this.get('', function() {
+                self.weatherCityId(null);
+                console.log("Empty hash parameter detected");
+            });
         }).run();
     }
 
     var wvm = new WeatherViewModel();
-    ko.applyBindings(wvm);
+    ko.applyBindings(wvm, document.getElementById("html-all"));
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
