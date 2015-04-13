@@ -44,7 +44,7 @@ router.post('/', function(req, res) {
                         res.redirect(backPath);
                         logger.info(userEmail + ' has logged in');
                     } else {
-                        logger.warn("unsuccessful login (wrong password for user)," +
+                        logger.warn("Unsuccessful login (wrong password for user)," +
                         " sending back to login page...");
                         res.render('login', {
                             title: 'mbrella',
