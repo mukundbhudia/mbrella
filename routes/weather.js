@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var City = require('../models/City');
 
 /* GET weather listing. */

@@ -241,7 +241,7 @@
             });
             this.get('#/', function() {
                 self.getError(0);
-                console.log("Empty hash parameter detected");
+                console.warn("Empty hash parameter detected");
             });
         }).run();
     }
@@ -258,11 +258,11 @@
         $.getJSON("/getWeather/" + cityIdToGet, function(data) {
             if (data) {
                 var dateAccessesd = getTimeZoneDate(data.dateret);
-                console.log("Weather data for " + data.name + " accessed at " +
+                console.info("Weather data for " + data.name + " accessed at " +
                 dateAccessesd.toUTCString());
 
                 if (data.dateret !== wvm.dateAccessed()) {
-                    console.log("Weather data has changed, updating UI...");
+                    console.info("Weather data has changed, updating UI...");
                     //TODO: Max and min temps shown elsewhere
                     wvm.getError(null);
                     wvm.dateAccessed(data.dateret);
@@ -281,7 +281,7 @@
                     wvm.sunset(getDate(data.sys.sunset));
                     gMapInitialize(data.coord.lat, data.coord.lon);
                 } else {
-                    console.log("Weather data unchanged, skipping UI updating.");
+                    console.info("Weather data unchanged, skipping UI updating.");
                 }
 
             } else {
@@ -290,7 +290,7 @@
             }
         }).fail(function(jqxhr, textStatus, error) {
             wvm.getError(jqxhr.status);
-            console.log( "Error: " + jqxhr.status + " " + error +
+            console.error( "Error: " + jqxhr.status + " " + error +
             ":\n" + jqxhr.responseText);
         });
     }

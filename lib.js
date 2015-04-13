@@ -1,5 +1,6 @@
 //Library functions for mbrella
 
+var logger = require('./logger');
 var http = require('http');
 var City = require('./models/City');
 var Country = require('./models/Country');
@@ -12,7 +13,7 @@ var Weather = require('./models/Weather');
 */
 var getAndSaveWeather = function(cityID, callback) {
     http.get("http://api.openweathermap.org/data/2.5/weather?id=" + cityID, function(getRes) {
-        console.log("...got response: " + getRes.statusCode + " collecting weather data...");
+        logger.info("...got response: " + getRes.statusCode + " collecting weather data...");
         //Build up the data from the HTTP GET request using the body variable (as it is streamed)
         var body = "";
         getRes.on('data', function(data) {
@@ -24,7 +25,7 @@ var getAndSaveWeather = function(cityID, callback) {
                 currentWeather = JSON.parse(body);
             } catch (error) {
                 currentWeather = null;
-                console.error(error);
+                logger.error(error);
             }
             if (currentWeather) {
                 if (currentWeather.cod === 200) {   //This is when OWM reports HTTP ok
@@ -44,8 +45,8 @@ var getAndSaveWeather = function(cityID, callback) {
                             //Instead of another db query with populate, we just...
                             //...add in the country data we already obtained
                             currentWeather.sys.country = foundCountryData;
-                            if (err) return console.error(err);
-                            console.log("Weather data for " + currentWeather.name +
+                            if (err) return logger.error(err);
+                            logger.info("Weather data for " + currentWeather.name +
                             " with ID: " + currentWeather.id + " saved.");
                             //Return the weather to callback function
                             callback && callback(null, currentWeather);
@@ -79,47 +80,47 @@ var checkCountryData = function() {
     fs.readFile(countryCodeFile, 'utf8', function (err, data) {
 
         if (err && (err.errno == 34)) {         //34 is file not found error
-            return console.log("country file '" + countryCodeFile + "' not found.");
+            return logger.error("country file '" + countryCodeFile + "' not found.");
 
         } else if (err && (err.errno != 34)) {  //Another file error has occured
-            return console.log(err);
+            return logger.error(err);
 
         } else {
             var countryCodesFromFile = null;
             try {
                 var countryCodesFromFile = JSON.parse(data);   //Attempt to Parse as JSON
             } catch (error) {
-                console.error(error);
-                return console.error("country file '" + countryCodeFile + "' found but is not in JSON form");
+                logger.error(error);
+                return logger.error("country file '" + countryCodeFile + "' found but is not in JSON form");
             }
-            console.log("Country file '" + countryCodeFile + "' found and loaded. Attempting DB checks...");
+            logger.info("Country file '" + countryCodeFile + "' found and loaded. Attempting DB checks...");
             //Check how many cities are in the db
             City.find().count(function (err, count) {
-                if (err) return console.error(err);
-                console.log(count + " cities in database.");
+                if (err) return logger.error(err);
+                logger.debug(count + " cities in database.");
             });
             //Check how many countries are in the db
             Country.find().count(function (err, count) {
-                if (err) return console.error(err);
-                console.log(count + " countries in database.");
+                if (err) return logger.error(err);
+                logger.debug(count + " countries in database.");
                 if (count === 0) {  //If there are no countries in the db we populate them
                     populateCountryData(countryCodesFromFile, function(countriesToAdd){
                         //Once country data is in correct form it is bulk inserted
                         Country.collection.insert(countriesToAdd, function(err, doc) {
-                            if (err) return console.error(err);
-                            console.log(countriesToAdd.length + " countries saved to database.");
+                            if (err) return logger.error(err);
+                            logger.info(countriesToAdd.length + " countries saved to database.");
                             //We then purge City data to re-populated using the new country data
                             City.remove({}, function(err){
-                                if (err) return console.error(err);
-                                console.log("City collection dropped to be re-populated.")
+                                if (err) return logger.error(err);
+                                logger.info("City collection dropped to be re-populated.")
                                 populateCityData(doc, countryCodesFromFile);
                             });
                         });
                     });
                 } else {    //If there are countries in the DB we use them to populate city data
-                    console.log("Countries found in database, skipping countries retrival");
+                    logger.info("Countries found in database, skipping countries retrival");
                     Country.find({}, function(err, data) {
-                        if (err) return console.error(err);
+                        if (err) return logger.error(err);
                         populateCityData(data, countryCodesFromFile);
                     });
                 }
@@ -157,7 +158,7 @@ var populateCountryData = function(countryCodes, callback) {
         //Return collated country codes as a callback
         callback && callback(countriesToAdd);
     } else {
-        console.error("No country codes supplied.");
+        logger.error("No country codes supplied.");
     }
 };
 
@@ -170,13 +171,13 @@ var populateCountryData = function(countryCodes, callback) {
 var populateCityData = function(countryCodes, countryCodesFromFile) {
 
     City.find().count(function (err, count) {
-        if (err) return console.error(err);
+        if (err) return logger.error(err);
         //Determine the number of cities in the db, only access URL if none in db
         if (count === 0) {
             //Access the URL and process the data
-            console.log("Accessing OWM cities text file...");
+            logger.info("Accessing OWM cities text file...");
             http.get("http://openweathermap.org/help/city_list.txt", function(res) {
-                console.log("..got response: " + res.statusCode + " collecting city data...");
+                logger.info("..got response: " + res.statusCode + " collecting city data...");
                 var body = "";
                 res.on('data', function(data) {
                     body += data.toString();    //accumulate text buffer as string
@@ -185,24 +186,24 @@ var populateCityData = function(countryCodes, countryCodesFromFile) {
                     var cityArray = body.split("\n");   //each line in text file is a city
                     //ignoring the header line and blank line at end of file
                     var totalCitiesInArray = cityArray.length - 2;
-                    console.log('...finished collecting city data. ' + (totalCitiesInArray) + " cities found.");
+                    logger.info('...finished collecting city data. ' + (totalCitiesInArray) + " cities found.");
                     //The string array is passed to be formed as an array of JSON objects
                     formCityData(cityArray, countryCodes, function(cities) {
                         //Batch insert the array of JSON objects
                         City.collection.insert(cities, function(err, doc) {
-                            if (err) return console.error(err);
-                            console.log(cities.length + " cities saved to database.");
+                            if (err) return logger.error(err);
+                            logger.info(cities.length + " cities saved to database.");
                             //Once all data is saved we can check if any country codes are missing
                             compareCountryCodes(countryCodesFromFile);
                         });
                     });
                 });
             }).on('error', function(e) {
-                console.log("Got error: " + e.message);
+                logger.error("Got error: " + e.message);
             });
 
         } else {
-            console.log("Cities found in database, skipping city retrival");
+            logger.info("Cities found in database, skipping city retrival");
         }
     });
 };
@@ -241,13 +242,13 @@ var formCityData = function(cityArray, countryCodes, callback) {
                 j++;
             }
             if (!foundCode) {   //The case where a city has an unrecognised country code
-                console.log("\tCity " + cityLine[1] +
+                logger.warn("\tCity " + cityLine[1] +
                 " (" + codeToFind + ") not found in ISO 3166 city codes file.");
             }
         }
         callback && callback(cities);
     } else {
-        console.error("No city array or country codes supplied.");
+        logger.error("No city array or country codes supplied.");
     }
 };
 
@@ -259,7 +260,7 @@ var formCityData = function(cityArray, countryCodes, callback) {
 
 var compareCountryCodes = function(countryCodesFile) {
     City.find().distinct('country').exec(function(error, codes) {
-        console.log("Distinct codes from cities: " + codes.length + "\n");
+        logger.info("Distinct codes from cities: " + codes.length + "\n");
         //We form the distinct country codes into an array of objects
         var distinctCountryCodesFromCities = [];
         for (var i = 0; i < codes.length; i++) {
@@ -290,13 +291,13 @@ var compareCountryCodes = function(countryCodesFile) {
                 }
                 //If we still haven't found a code then we add what we were looking for to the missing list
                 if (!foundCode) {
-                    console.log("\t" + codeToFind + " (" + countryCodesFile[i].name +
+                    logger.warn("\t" + codeToFind + " (" + countryCodesFile[i].name +
                     ") not found in database city codes");
                     countriesNotFound.push(codeToFind);
                 }
             }
             if (countriesNotFound.length > 0) {
-                console.log("\n" + countriesNotFound.length +
+                logger.warn("\n" + countriesNotFound.length +
                 " country codes missing from OWM API but are in the database.");
             }
         });

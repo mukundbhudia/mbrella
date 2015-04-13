@@ -1,6 +1,7 @@
 var http = require('http');
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var Weather = require('../models/Weather');
 var lib = require('../lib');
 
@@ -10,7 +11,7 @@ router.get('/:cityID', function(req, res) {
     //We get the most recent weather data document by city ID parameter
     Weather.find({id: cityID}).sort({dateret: "descending"})
     .limit(1).populate('sys.country').exec(function(err, data) {
-        if (err) return console.error(err);
+        if (err) return logger.error(err);
         //Check if data is returned and is not empty
         if (data && (data.length > 0) ) {
 
@@ -21,17 +22,17 @@ router.get('/:cityID', function(req, res) {
             //Compare the db time (in milliseconds) for the document 10 mins ahead
             //This is to prevent overloading OWM with requests
             if (currentDate.getTime()  < (dbWeatherDate.getTime() + tenMinsInMilliseconds) ) {
-                console.log("\tWeather data for " +
+                logger.debug("\tWeather data for " +
                 dbWeather.name  + " not older than 10 mins, obtaining from DB...");
                 res.json(dbWeather);
             } else {
-                console.log("\tWeather data for " +
+                logger.debug("\tWeather data for " +
                 dbWeather.name  + " older than 10 mins, obtaining from API...");
                 lib.getAndSaveWeather(cityID, function(err, weather) {   //ask library to access API
                     if (weather) {
                         res.json(weather);
                     } else if (err) {
-                        console.error(err);
+                        logger.error(err);
                         if (err.cod) {  //If OWM gives a specific HTTP status code
                             res.status(err.cod).json({ error: err });
                         } else {
@@ -42,12 +43,12 @@ router.get('/:cityID', function(req, res) {
             }
         } else {
             //If no weather document for the city ID parameter is found, the API is accessed
-            console.log("\tWeather data not in DB, obtaining from API...");
+            logger.debug("\tWeather data not in DB, obtaining from API...");
             lib.getAndSaveWeather(cityID, function(err, weather) {
                 if (weather) {
                     res.json(weather);
                 } else if (err) {
-                    console.error(err);
+                    logger.error(err);
                     if (err.cod) {  //If OWM gives a specific HTTP status code
                         res.status(err.cod).json({ error: err });
                     } else {

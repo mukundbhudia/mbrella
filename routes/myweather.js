@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var User = require('../models/User');
 
 /* GET a users favourite weather listing. */

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var url = require("url");
 var User = require('../models/User');
 var auth = require('../auth');
@@ -12,7 +13,7 @@ router.get('/', function(req, res) {
     var backURLpathname = url.parse(backURL).pathname;
     //Check if user is logged in already
     if (sess.useremail) {
-        console.log("User already logged in, redirecting");
+        logger.info("User already logged in, redirecting");
         res.location("/myweather"); //Send user to the homepage as they are already logged in
         res.redirect("/myweather");
     } else {
@@ -48,15 +49,15 @@ router.post('/', function(req, res) {
                         signUpInfo: 'The email address ' +
                         userEmail + ' is already taken, please try again.'
                     });
-                    console.log("Sign up unsuccessful, user: " +
+                    logger.info("Sign up unsuccessful, user: " +
                     userEmail + " already exists. Sending back to sign up page...");
                 }
             } else {
                 auth.generatePassword(userPassword, function(hashedPassword){
                     userToSignup.password = hashedPassword;
                     userToSignup.save(function (err, userToSignup) {
-                        if (err) return console.error(err);
-                        console.log("User: " + userToSignup.getFullName() +
+                        if (err) return logger.error(err);
+                        logger.info("User: " + userToSignup.getFullName() +
                         " with email: " + userEmail + ' has signed up.');
                         sess.useremail = userToSignup.email;
                         sess.userfirstname = userToSignup.firstName;

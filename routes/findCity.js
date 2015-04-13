@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var City = require('../models/City');
 
 /* GET findCity. */
@@ -7,18 +8,18 @@ router.get('/:cityToFind', function(req, res) {
     var cityToFind = req.params.cityToFind;
     //Execute search only after 3 or more chars entererd
     if (cityToFind.length >= 3) {
-        console.log("Searching for cities containing: " + cityToFind + "...");
+        logger.debug("Searching for cities containing: " + cityToFind + "...");
         //TODO: Check the regex. Needs to allow "City of London" when searching for "london"
         City.find({
              cityName: { $regex: new RegExp("" + cityToFind.toLowerCase(), "i") }
          }, {limit: 10})
          .populate('country')   //TODO: have country.countryName only?
          .select('cityID cityName country').exec(function(err, doc) {
-            if (err) return console.error(err);
+            if (err) return logger.error(err);
             if (doc) {
                 var foundCities = doc;
                 //TODO: Strip out db id and __v items
-                console.log("...found " + doc.length + " cities matching " + cityToFind);
+                logger.debug("...found " + doc.length + " cities matching " + cityToFind);
                 res.json(foundCities);
             } else {
                 res.json({error : 'City: ' + cityToFind + ' not found'});

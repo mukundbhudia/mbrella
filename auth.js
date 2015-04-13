@@ -1,5 +1,6 @@
 //Authentication functions for mbrella
 
+var logger = require('./logger');
 var bcrypt = require('bcrypt');
 
 /*

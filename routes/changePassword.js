@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var User = require('../models/User');
 var auth = require('../auth');
 
@@ -10,7 +11,7 @@ router.get('/', function(req, res) {
     if (sess.useremail) {
         //If the user has logged on we find their details and their corresponding favorite cities
         User.findById(userID, function(err, userInfo) {
-            if (err) return console.error(err);
+            if (err) return logger.error(err);
             userInfo.title = "mbrella";
             res.render('changePassword', userInfo);
         });
@@ -38,8 +39,8 @@ router.post('/', function(req, res) {
                     //We then update the users data including their new password
                     //TODO: Do we need to update the entire user JSON document?
                     User.findByIdAndUpdate(userID, userToUpdate, function(err, doc) {
-                        if (err) return console.error(err);
-                        console.log("Password for user " + doc.email +
+                        if (err) return logger.error(err);
+                        logger.info("Password for user " + doc.email +
                         " changed successfully.");
                         //We notify the user the password has been changed
                         res.render('changePassword', {
@@ -50,7 +51,7 @@ router.post('/', function(req, res) {
                     });
                 });
             } else {    //This is if the old password entered is incorrect
-                console.log("Password for user " + doc.email + " not changed. " +
+                logger.warn("Password for user " + doc.email + " not changed. " +
                 "Old password does not match database.");
                 res.render('changePassword', {
                     title: "mbrella",

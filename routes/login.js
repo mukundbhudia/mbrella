@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../logger');
 var url = require("url");
 var User = require('../models/User');
 var auth = require('../auth');
@@ -11,7 +12,7 @@ router.get('/', function(req, res) {
     var backURL = req.query.return || url.parse(req.header('Referer')).pathname || '/';
     //Check if user is logged in already
     if (sess.useremail) {
-        console.log("User already logged in, redirecting");
+        logger.info("User already logged in, redirecting");
         res.location("/myweather"); //Send user to the homepage as they are already logged in
         res.redirect("/myweather");
     } else {
@@ -41,9 +42,9 @@ router.post('/', function(req, res) {
                         sess.userID = foundUser._id;
                         res.location(backPath); //Send user back to where they were
                         res.redirect(backPath);
-                        console.info(userEmail + ' has logged in');
+                        logger.info(userEmail + ' has logged in');
                     } else {
-                        console.log("unsuccessful login (wrong password for user)," +
+                        logger.warn("unsuccessful login (wrong password for user)," +
                         " sending back to login page...");
                         res.render('login', {
                             title: 'mbrella',
@@ -55,11 +56,11 @@ router.post('/', function(req, res) {
             } else {
                 //Technically this case should not occur as the email address for a user is
                 //checked for uniqueness upon sign up
-                console.error("unsuccessful login, multiple user found with email: " + userEmail);
+                logger.error("Unsuccessful login, multiple user found with email: " + userEmail);
             }
 
         } else { //No user matches the db query using the given email address
-            console.log("unsuccessful login (user not exist), sending back to login page...");
+            logger.warn("Unsuccessful login (user not exist), sending back to login page...");
             res.render('login', {
                 title: 'mbrella',
                 loginInfo: "The given email does not exist in our records, please " +
