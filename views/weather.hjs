@@ -65,11 +65,21 @@
         </div>
     </nav>
 
-    <div data-bind="visible: weatherCityId() == null" class="container">
+    <div data-bind="visible: getError() == 0" class="container">
         <h3>Enter a city in the search bar above to find the weather...</h3>
     </div>
 
-    <div data-bind="visible: weatherCityId" class="container">
+    <div data-bind="visible: getError() == 404" class="container">
+        <h3>That city could not be found, please try again...</h3>
+    </div>
+
+    <div data-bind="visible: getError() == 500" class="container">
+        <h3>Opps we seem to be having a probem, please try reloading the page
+            or enter a different city...
+        </h3>
+    </div>
+
+    <div data-bind="visible: getError() == null" class="container">
 
         <h2 data-bind="text: cityName() + ' - ' + countryName()" class="cover-heading"></h2>
         <div class="row">
@@ -183,6 +193,7 @@
 
     function WeatherViewModel() {
         var self = this;
+        self.getError = ko.observable();
         self.weatherCityId = ko.observable();
         self.cityName = ko.observable();
         self.dateAccessed = ko.observable();
@@ -228,8 +239,8 @@
                 getWeatherData(this.params.cityId);
                 refreshWeather = setInterval(getWeatherData, fiveMinsInMilliseconds);
             });
-            this.get('', function() {
-                self.weatherCityId(null);
+            this.get('#/', function() {
+                self.getError(0);
                 console.log("Empty hash parameter detected");
             });
         }).run();
@@ -253,6 +264,7 @@
                 if (data.dateret !== wvm.dateAccessed()) {
                     console.log("Weather data has changed, updating UI...");
                     //TODO: Max and min temps shown elsewhere
+                    wvm.getError(null);
                     wvm.dateAccessed(data.dateret);
                     wvm.cityName(data.name);
                     wvm.countryName(data.sys.country.countryName);
@@ -273,8 +285,13 @@
                 }
 
             } else {
+                wvm.getError(0);
                 console.error("HTTP GET error: Unable to get weather data.");
             }
+        }).fail(function(jqxhr, textStatus, error) {
+            wvm.getError(jqxhr.status);
+            console.log( "Error: " + jqxhr.status + " " + error +
+            ":\n" + jqxhr.responseText);
         });
     }
 

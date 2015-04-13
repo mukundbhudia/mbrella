@@ -23,31 +23,42 @@ var getAndSaveWeather = function(cityID, callback) {
             try {   //Try and catch as http get data could be malformed
                 currentWeather = JSON.parse(body);
             } catch (error) {
+                currentWeather = null;
                 console.error(error);
-                callback && callback("Weather data for city ID: " + cityID +
-                " not in JSON form.", null);
             }
             if (currentWeather) {
-                var weatherToSaveCountry = currentWeather.sys.country;
-                var foundCountryData = null;
-                Country.findOne({ countryCode: weatherToSaveCountry }, function(err, country) {
-                    foundCountryData = country;
-                    currentWeather.sys.country = country._id;
-                    weatherToSave = new Weather(currentWeather);
-                    //Perfrom save to db
-                    weatherToSave.save(function(err, data) {
-                        currentWeather = data;
-                        currentWeather.sys.country = foundCountryData;
-                        if (err) return console.error(err);
-                        console.log("Weather data for " + currentWeather.name +
-                        " with ID: " + currentWeather.id + " saved.");
-                        //Return the weather to callback function
-                        callback && callback(null, currentWeather);
+                if (currentWeather.cod === 200) {   //This is when OWM reports HTTP ok
+                    //We want to send the weather JSON data with pre-populated country data
+                    var weatherToSaveCountry = currentWeather.sys.country;
+                    var foundCountryData = null;
+                    //Find the country doc givin the code
+                    Country.findOne({ countryCode: weatherToSaveCountry }, function(err, country) {
+                        foundCountryData = country;
+                        //We replace the country code given by OWM with our country...
+                        //...id so it can be easily populated in the future
+                        currentWeather.sys.country = country._id;
+                        weatherToSave = new Weather(currentWeather);
+                        //Perfrom save to db
+                        weatherToSave.save(function(err, data) {
+                            currentWeather = data;
+                            //Instead of another db query with populate, we just...
+                            //...add in the country data we already obtained
+                            currentWeather.sys.country = foundCountryData;
+                            if (err) return console.error(err);
+                            console.log("Weather data for " + currentWeather.name +
+                            " with ID: " + currentWeather.id + " saved.");
+                            //Return the weather to callback function
+                            callback && callback(null, currentWeather);
+                        });
                     });
-                });
+
+                } else {
+                    //Another HTTP code is given so we output the OWM JSON as an error
+                    callback && callback(currentWeather, null);
+                }
             } else {
                 callback && callback("Weather data for city ID: " + cityID +
-                " not in JSON form.", null);
+                " not in JSON form. \n \n" + body + "\n", null);
             }
         });
     }).on('error', function(e) {

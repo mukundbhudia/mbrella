@@ -32,7 +32,11 @@ router.get('/:cityID', function(req, res) {
                         res.json(weather);
                     } else if (err) {
                         console.error(err);
-                        res.status(500).json({ error: 'Cannot connect to API' });
+                        if (err.cod) {  //If OWM gives a specific HTTP status code
+                            res.status(err.cod).json({ error: err });
+                        } else {
+                            res.status(500).json({ error: err });
+                        }
                     }
                 });
             }
@@ -44,7 +48,11 @@ router.get('/:cityID', function(req, res) {
                     res.json(weather);
                 } else if (err) {
                     console.error(err);
-                    res.status(500).json({ error: 'Cannot connect to API' });
+                    if (err.cod) {  //If OWM gives a specific HTTP status code
+                        res.status(err.cod).json({ error: err });
+                    } else {
+                        res.status(500).json({ error: err });
+                    }
                 }
             });
         }
