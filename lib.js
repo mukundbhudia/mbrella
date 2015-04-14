@@ -298,8 +298,8 @@ var compareCountryCodes = function(countryCodesFile) {
                 }
             }
             if (countriesNotFound.length > 0) {
-                logger.warn("\n" + countriesNotFound.length +
-                " country codes missing from OWM API but are in the database.");
+                logger.warn("\t" + countriesNotFound.length +
+                " country codes missing from OWM API but are in the database. \n");
             }
         });
     });

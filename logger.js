@@ -8,7 +8,7 @@ winston.emitErrs = true;
 function currentTimeStamp() {
     var now = new Date();
     return now.getDate() + "/" + (now.getMonth() + 1) + "/" + now.getFullYear() +
-    " " + now.toLocaleTimeString();
+    " " + now.toLocaleTimeString() + "." + now.getMilliseconds();
 }
 
 var customSettings = {
