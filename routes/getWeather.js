@@ -27,11 +27,11 @@ router.get('/:cityID', function(req, res) {
                     //Compare the db time (in milliseconds) for the document 10 mins ahead
                     //This is to prevent overloading OWM with requests
                     if (currentDate.getTime()  < (dbWeatherDate.getTime() + tenMinsInMilliseconds) ) {
-                        logger.debug("\tWeather data for " +
+                        logger.debug("Weather data for " +
                         dbWeather.name  + " not older than 10 mins, obtaining from DB...");
                         res.json(dbWeather);
                     } else {
-                        logger.debug("\tWeather data for " +
+                        logger.debug("Weather data for " +
                         dbWeather.name  + " older than 10 mins, obtaining from API...");
                         lib.getAndSaveWeather(cityID, function(err, weather) {   //ask library to access API
                             if (weather) {
@@ -48,7 +48,7 @@ router.get('/:cityID', function(req, res) {
                     }
                 } else {
                     //If no weather document for the city ID parameter is found, the API is accessed
-                    logger.debug("\tWeather data not in DB, obtaining from API...");
+                    logger.debug("Weather data for id " + cityID + " not in DB, obtaining from API...");
                     lib.getAndSaveWeather(cityID, function(err, weather) {
                         if (weather) {
                             res.json(weather);

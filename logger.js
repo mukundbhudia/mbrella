@@ -5,6 +5,12 @@
 var winston = require('winston');
 winston.emitErrs = true;
 
+function currentTimeStamp() {
+    var now = new Date();
+    return now.getDate() + "/" + (now.getMonth() + 1) + "/" + now.getFullYear() +
+    " " + now.toLocaleTimeString();
+}
+
 var customSettings = {
     //Emphasis choices: bold, italic, underline, inverse
     //Colour choices: yellow, cyan, white, magenta, green, red, grey, blue
@@ -41,6 +47,7 @@ var logger = new (winston.Logger)({
         new winston.transports.Console({
             level: 'trace',
             handleExceptions: true,
+            timestamp: currentTimeStamp,
             json: false,
             colorize: true
         })

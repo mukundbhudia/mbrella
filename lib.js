@@ -189,6 +189,7 @@ var populateCityData = function(countryCodes, countryCodesFromFile) {
                     logger.info('...finished collecting city data. ' + (totalCitiesInArray) + " cities found.");
                     //The string array is passed to be formed as an array of JSON objects
                     formCityData(cityArray, countryCodes, function(cities) {
+                        logger.debug(cities.length + " cities formed with country codes.");
                         //Batch insert the array of JSON objects
                         City.collection.insert(cities, function(err, doc) {
                             if (err) return logger.error(err);
