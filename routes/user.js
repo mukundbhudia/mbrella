@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
     if (sess.useremail) {
         //If the user has logged on we find their details and their corresponding favorite cities
         User.findById(userID).populate('favCities').exec(function(err, doc) {
-            if (err) return console.error(err);
+            if (err) return logger.error(err);
             var options = {
                 path: 'favCities.country',
                 model: 'Country'
@@ -50,7 +50,7 @@ router.post('/', function(req, res) {
     };
 
     User.findByIdAndUpdate(userID, userToUpdate, function(err, doc) {
-        if (err) return console.error(err); //TODO: if doc?
+        if (err) return logger.error(err); //TODO: if doc?
         res.location("/myweather/user?updated=true");
         res.redirect("/myweather/user?updated=true");
     });

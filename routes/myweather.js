@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
     if (sess.useremail) {
         //If the user has logged on we find their details and their corresponding favorite cities
         User.findById(userID).populate('favCities').exec(function(err, doc) {
-            if (err) return console.error(err);
+            if (err) return logger.error(err);
             var userInfo = doc;
             userInfo.userEmail = sess.useremail;
             userInfo.title = "mbrella";
