@@ -32,7 +32,7 @@ var getAndSaveWeather = function(cityID, callback) {
                     //We want to send the weather JSON data with pre-populated country data
                     var weatherToSaveCountry = currentWeather.sys.country;
                     var foundCountryData = null;
-                    //Find the country doc givin the code
+                    //Find the country doc given the code
                     Country.findOne({ countryCode: weatherToSaveCountry }, function(err, country) {
                         foundCountryData = country;
                         //We replace the country code given by OWM with our country...
@@ -41,15 +41,21 @@ var getAndSaveWeather = function(cityID, callback) {
                         weatherToSave = new Weather(currentWeather);
                         //Perfrom save to db
                         weatherToSave.save(function(err, data) {
-                            currentWeather = data;
-                            //Instead of another db query with populate, we just...
-                            //...add in the country data we already obtained
-                            currentWeather.sys.country = foundCountryData;
-                            if (err) return logger.error(err);
-                            logger.info("Weather data for " + currentWeather.name +
-                            " with ID: " + currentWeather.id + " saved.");
-                            //Return the weather to callback function
-                            callback && callback(null, currentWeather);
+                            if (err) {
+                                logger.error(err);
+                                callback && callback("DB save error: \n" + err , null);
+                            } else {
+                                //Data from db query is not quite in JSON form so we
+                                //...have to stringify and then parse
+                                currentWeather = JSON.parse(JSON.stringify(data));
+                                //Instead of another db query with populate, we just...
+                                //...add in the country data we already obtained
+                                currentWeather.sys.country = foundCountryData;
+                                logger.info("Weather data for " + currentWeather.name +
+                                " with ID: " + currentWeather.id + " saved.");
+                                //Return the weather to callback function
+                                callback && callback(null, currentWeather);
+                            }
                         });
                     });
 
