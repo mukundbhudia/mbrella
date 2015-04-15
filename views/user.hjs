@@ -54,9 +54,9 @@
                     </li>
                     {{/firstName}}
                 </ul>
-                <div class="navbar-form navbar-right">
-                    <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
-                </div>
+                <!-- <div class="navbar-form navbar-right">
+
+                </div> -->
             </div><!--/.nav-collapse -->
         </div>
     </nav>
@@ -70,40 +70,43 @@
         <form class="form-horizontal" role="form" id="userEditForm" method="post" action="/myweather/user">
             <div class="form-group">
                 <label for="firstName" class="col-sm-2 control-label">First name</label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                     <input type="text" class="form-control" id="firstName" name="userfirstname" value="{{firstName}}" placeholder="First name">
                 </div>
             </div>
             <div class="form-group">
                 <label for="lastName" class="col-sm-2 control-label">Last name</label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                     <input type="text" class="form-control" id="lastName" name="userlastname" value="{{lastName}}" placeholder="Last name">
                 </div>
             </div>
             <div class="form-group">
                 <label for="email" class="col-sm-2 control-label">Email</label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                     <input type="email" class="form-control" id="email" name="useremail" value="{{email}}" placeholder="Email">
                 </div>
             </div>
             <div class="form-group">
                 <label for="password" class="col-sm-2 control-label">Password</label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                     <a href="/myweather/user/changepassword">Change password</a>
                 </div>
             </div>
             <hr>
             <div class="form-group">
                 <label for="citySearch" class="col-sm-2 control-label">Add a city</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="citySearch" name="citySearch" placeholder="Add a new city..." autocomplete="off">
+                <div class="col-sm-6">
+                    <input type="text" class="typeahead form-control" id="citySearch" placeholder="Enter a city name..." autocomplete="off">
                 </div>
-                <button id="addCityButton" type="" class="btn btn-default">Add city</button>
+                <div class="col-md-4">
+                    <div id="messagesContainer">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="usersCitiesList" class="col-sm-2 control-label">My cities</label>
-                <div class="col-sm-10">
-                    <select multiple size="10" id="usersCitiesList" name="usersCitiesList" class="form-control">
+                <div class="col-sm-8">
+                    <select multiple size="8" id="usersCitiesList" name="usersCitiesList" class="form-control">
                         {{#favCities}}
                         <option>{{cityName}} - {{country.countryName}}</option>
                         {{/favCities}}
@@ -163,10 +166,30 @@
     }
 
     function addCityToList(city) {
-        favCities.push(city._id);
-        $("#citySearch").val('');
-        $("#usersCitiesList").append("<option>" + city.cityName + " - " + city.country.countryName + "</option>");
-        populateFavCitiesForm(favCities);
+        if (isCityInList(city)) {
+            $('#citySearch').val("");
+            $("#messagesContainer").html(
+                "<div class='alert alert-warning alert-dismissible' role='alert'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-label" +
+                "='Close'><span aria-hidden='true'>&times;</span></button><strong>" +
+                "Oops!</strong> " + city.cityName + " is already in the list</div>");
+        } else {
+            $("#messagesContainer").html("");
+            favCities.push(city._id);
+            $("#citySearch").val('');
+            $("#usersCitiesList").append("<option>" + city.cityName + " - " + city.country.countryName + "</option>");
+            populateFavCitiesForm(favCities);
+        }
+    }
+
+    function isCityInList(cityToCheck) {
+        var found = false;
+        for (var i = 0; i < favCities.length; i++) {
+            if (cityToCheck._id === favCities[i]) {
+                found = true;
+            }
+        }
+        return found;
     }
 
     </script>
