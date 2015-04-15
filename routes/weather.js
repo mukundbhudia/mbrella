@@ -12,6 +12,7 @@ router.get('/', function(req, res) {
     if (sess.useremail) {
         weatherViewToSend.userEmail = sess.useremail;
         weatherViewToSend.firstName = sess.userfirstname;
+        weatherViewToSend.userFavCities = sess.userFavCities;
     }
     res.render('weather', weatherViewToSend);
 });

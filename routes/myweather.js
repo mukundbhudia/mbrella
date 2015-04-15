@@ -9,12 +9,11 @@ router.get('/', function(req, res) {
     var userID = sess.userID;
     if (sess.useremail) {
         //If the user has logged on we find their details and their corresponding favorite cities
-        User.findById(userID).populate('favCities').exec(function(err, doc) {
-            if (err) return logger.error(err);
-            var userInfo = doc;
-            userInfo.userEmail = sess.useremail;
-            userInfo.title = "mbrella";
-            res.render('myweather', userInfo);
+        res.render('myweather', {
+            title: "mbrella",
+            userEmail: sess.useremail,
+            firstName: sess.userfirstname,
+            favCities: sess.userFavCities
         });
     } else {
         res.location('/login?return=' + req.originalUrl);

@@ -49,10 +49,19 @@ router.post('/', function(req, res) {
         favCities: citiesToAddArray
     };
 
-    User.findByIdAndUpdate(userID, userToUpdate, function(err, doc) {
-        if (err) return logger.error(err); //TODO: if doc?
-        res.location("/myweather/user?updated=true");
-        res.redirect("/myweather/user?updated=true");
+    User.findByIdAndUpdate(userID, userToUpdate).populate('favCities')
+    .exec(function(err, doc) {
+        if (doc) { //Save successful
+            logger.info("Settings for " + userEmail + " saved successfully.");
+            //Get the favourite cities if they've been updated
+            sess.userFavCities = doc.favCities;
+            res.location("/myweather/user?updated=true");
+            res.redirect("/myweather/user?updated=true");
+        } else if (err) {
+            logger.error("DB save error. User settings have not been saved. \n" + err);
+            res.location("/myweather/user?updated=false");
+            res.redirect("/myweather/user?updated=false");
+        }
     });
 });
 

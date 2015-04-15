@@ -28,7 +28,7 @@ router.post('/', function(req, res) {
     var userPassword = req.body.userpassword;
     var backPath = req.body.backPath;   //the URL path the user was on prior to logging in
 
-    User.find({email: userEmail}, function(err, doc){
+    User.find({email: userEmail}).populate('favCities').exec( function(err, doc){
         if (doc[0]) {   //If a result exists then the correct user has logged in
             var foundUser = doc[0].toObject(); //Need to convert to JSON object
             //First we check that only one user exists with the username
@@ -40,6 +40,7 @@ router.post('/', function(req, res) {
                         sess.useremail = foundUser.email;
                         sess.userfirstname = foundUser.firstName;
                         sess.userID = foundUser._id;
+                        sess.userFavCities = foundUser.favCities;
                         res.location(backPath); //Send user back to where they were
                         res.redirect(backPath);
                         logger.info(userEmail + ' has logged in');
