@@ -243,11 +243,11 @@
                 self.getError(0);
                 console.warn("Empty hash parameter detected");
             });
-            this.get('weather/', function() {
+            this.get('/weather/', function() {
                 self.getError(0);
                 console.warn("Empty hash parameter detected");
             });
-            this.get('weather', function() {
+            this.get('/weather', function() {
                 self.getError(0);
                 console.warn("Empty hash parameter detected");
             });
