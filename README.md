@@ -30,6 +30,29 @@ Once cloned/downloaded cd to directory and:
 npm install
 ```
 
+### How do I test? ###
+```
+#!shell
+
+npm test
+```
+However, for more robust and rapid testing during development I recommend installing jasmine-node (may need sudo/admin privileges):
+
+```
+#!shell
+
+
+npm install jasmine-node -g
+```
+then run the tests like so:
+
+```
+#!shell
+
+jasmine-node spec --autotest --color
+```
+where *spec --autotest* makes jasmine run the test every time a '-spec.js' file is saved. And *--color* uses colour to indicates passing (green) or failing (red) specs.
+
 ### Who do I talk to? ###
 
 * Repo owner or admin
