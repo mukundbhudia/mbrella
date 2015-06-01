@@ -8,7 +8,7 @@ describe("Authentication library", function() {
 
     it("should generate a hashed password from plaintext", function(done) {
         auth.generatePassword(testPassword, function(password) {
-            testHashPassword = password;
+            testHashPassword = password;    //Remember the hash for later comprison
             expect(password).not.toBe(testPassword);
             done();
         });
