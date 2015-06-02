@@ -47,18 +47,31 @@ router.get('/:cityID', function(req, res) {
                         });
                     }
                 } else {
-                    //If no weather document for the city ID parameter is found, the API is accessed
-                    logger.debug("Weather data for id " + cityID + " not in DB, obtaining from API...");
-                    lib.getAndSaveWeather(cityID, function(err, weather) {
-                        if (weather) {
-                            res.json(weather);
-                        } else if (err) {
-                            logger.error(err);
-                            if (err.cod) {  //If OWM gives a specific HTTP status code
-                                res.status(err.cod).json({ error: err });
-                            } else {
-                                res.status(500).json({ error: err });
-                            }
+                    lib.doesCityExist(cityID, function(cityerr, doesCityExist) {
+                        if (cityerr) return logger.error(cityerr);
+                        if (doesCityExist) {
+                            //If no weather document for the city ID parameter
+                            // is found, the API is accessed
+                            logger.debug("Weather data for id " + cityID +
+                            " not in DB, obtaining from API...");
+                            lib.getAndSaveWeather(cityID, function(err, weather) {
+                                if (weather) {
+                                    res.json(weather);
+                                } else if (err) {
+                                    logger.error(err);
+                                    if (err.cod) {  //If OWM gives a specific HTTP status code
+                                        res.status(err.cod).json({ error: err });
+                                    } else {
+                                        res.status(500).json({ error: err });
+                                    }
+                                }
+                            });
+                        } else {
+                            //If no weather document for the city ID parameter is found,
+                            //we check if the city exists in the database
+                            logger.warn("The city with ID " + cityID + " does not exist in DB");
+                            res.status(404).json({ error: "The city with ID " +
+                            cityID + " does not exist in DB" });
                         }
                     });
                 }

@@ -216,6 +216,21 @@ var populateCityData = function(countryCodes, countryCodesFromFile) {
 };
 
 /*
+    Takes in a cityID, checks the database if that city ID returns a boolean result
+*/
+var doesCityExist = function(cityID, callback) {
+    City.find({cityID: cityID}).count(function (err, count) {
+        logger.debug("We found " + count + " cities for ID: " + cityID);
+        if (err) {
+            logger.error(err);
+            callback && callback(err, null);
+        } else {
+            callback && callback(null, count > 0);
+        }
+    });
+};
+
+/*
     Uses OWM city text file as an array of strings goes through each line to
     extract the city info. For each line the corresponding country code is
     matched with the countries collection and the country id is saved for the
@@ -314,5 +329,6 @@ var compareCountryCodes = function(countryCodesFile) {
 //Functions used outside this library are exported below
 module.exports = {
     getAndSaveWeather: getAndSaveWeather,
-    checkCountryData: checkCountryData
+    checkCountryData: checkCountryData,
+    doesCityExist: doesCityExist
 };

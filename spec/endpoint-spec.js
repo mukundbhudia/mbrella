@@ -84,13 +84,14 @@ describe("getWeather API endpoint", function() {
     });
 
     it("should return JSON error when a non-existant cityID is entered", function(done) {
+        var nonExistantCityID = '123456';
         supertest
-        .get('/getWeather/123456')
+        .get('/getWeather/' + nonExistantCityID)
         .end(function(err, res) {
             expect(res.status).toBe(404);
             expect(res.type).toBe('application/json');
-            expect(res.body.error.message).toEqual("Error: Not found city");
-            expect(res.body.error.cod).toEqual("404");
+            expect(res.body.error).toEqual("The city with ID " + nonExistantCityID +
+            " does not exist in DB");
             done();
         });
     }, 8000);   //We give it a bit longer as its accessing HTTP API
