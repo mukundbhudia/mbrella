@@ -81,6 +81,13 @@ var getAndSaveWeather = function(cityID, callback) {
     correct country can be assigned to the corresponding city.
 */
 var checkCountryData = function() {
+    console.log("           _              _ _\n" +
+                " _ __ ___ | |__  _ __ ___| | | __ _\n" +
+                "| '_ ` _ \\| '_ \\| '__/ _ \\ | |/ _` |\n" +
+                "| | | | | | |_) | | |  __/ | | (_| |\n" +
+                "|_| |_| |_|_.__/|_|  \\___|_|_|\\__,_|\n");
+    logger.info("App has been launched. Performing data checks...");
+    
     var countryCodeFile = "./data/slim-2.json";      //The name of the 2 char country code JSON file
     fs = require('fs');
     fs.readFile(countryCodeFile, 'utf8', function (err, data) {
@@ -210,8 +217,9 @@ var populateCityData = function(countryCodes, countryCodesFromFile) {
             });
 
         } else {
-            logger.info("Cities found in database, skipping city retrival");
+            logger.info("Cities found in database, skipping city retrival\n");
         }
+        logger.info("...data checks complete. App ready to roll.\n");
     });
 };
 
