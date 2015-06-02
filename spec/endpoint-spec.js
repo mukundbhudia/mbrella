@@ -56,7 +56,8 @@ describe("getWeather API endpoint", function() {
         .expect(404, done);
     });
 
-    it("should return JSON error when characters are entered as a cityID", function(done) {
+    it("should return JSON error when alphabetic characters " +
+     " are entered as a cityID", function(done) {
         var characterCityID = "abcdefg";
         supertest
         .get('/getWeather/' + characterCityID)
@@ -67,6 +68,27 @@ describe("getWeather API endpoint", function() {
                 "The city ID: " + characterCityID + " is not a number");
             done();
         });
+    });
+
+    it("should return JSON error when special characters " +
+     " are entered as a cityID", function(done) {
+        var specialCharacterCityID = "*^&";
+        supertest
+        .get('/getWeather/' + specialCharacterCityID)
+        .end(function(err, res) {
+            expect(res.status).toBe(404);
+            expect(res.type).toBe('application/json');
+            expect(res.body.error).toEqual(
+                "The city ID: " + specialCharacterCityID + " is not a number");
+            done();
+        });
+    });
+
+    it("should return a 400 error when invalid characters " +
+      " are entered as a city", function(done) {
+        supertest
+        .get('/getWeather/!@£^£%^$%^')
+        .expect(400, done);
     });
 
     it("should return JSON error when alpha-numeric " +
@@ -94,6 +116,19 @@ describe("getWeather API endpoint", function() {
             " does not exist in DB");
             done();
         });
-    }, 8000);   //We give it a bit longer as its accessing HTTP API
+    });
+
+    it("should return JSON weather data for correct city", function(done) {
+        var cityID = 2641181; //cityID for Norwich
+        supertest
+        .get('/getWeather/' + cityID)
+        .end(function(err, res) {
+            expect(res.status).toBe(200);
+            expect(res.type).toBe('application/json');
+            expect(res.body.id).toEqual(cityID);
+            expect(res.body.name).toEqual("Norwich");
+            done();
+        });
+    }, 8000);   //We give it a bit longer as it may access the OWM API
 
 });
