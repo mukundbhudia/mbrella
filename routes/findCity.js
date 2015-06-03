@@ -12,8 +12,7 @@ router.get('/:cityToFind', function(req, res) {
         //TODO: Check the regex. Needs to allow "City of London" when searching for "london"
         City.find({
              cityName: { $regex: new RegExp("" + cityToFind.toLowerCase(), "i") }
-         }, {limit: 10})
-         .populate('country')   //TODO: have country.countryName only?
+         }).limit(10).populate('country')   //TODO: have country.countryName only?
          .select('cityID cityName country').exec(function(err, doc) {
             if (err) return logger.error(err);
             if (doc) {
