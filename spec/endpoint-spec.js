@@ -46,6 +46,29 @@ describe("findCity API endpoint", function() {
         });
     });
 
+    it("should return five cities for the entered text: 'carac'", function(done){
+        supertest
+        .get('/findCity/carac')
+        .end(function(err, res) {
+            expect(res.status).toBe(200);
+            expect(res.type).toBe('application/json');
+            expect(res.body.length).toBe(6);
+            done();
+        });
+    });
+
+    it("should return a maximum of 10 cities for short city text " +
+     " such as 'car'", function(done){
+        supertest
+        .get('/findCity/car')
+        .end(function(err, res) {
+            expect(res.status).toBe(200);
+            expect(res.type).toBe('application/json');
+            expect(res.body.length).toBe(10);
+            done();
+        });
+    });
+
 });
 
 describe("getWeather API endpoint", function() {
