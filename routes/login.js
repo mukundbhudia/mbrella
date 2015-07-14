@@ -21,7 +21,7 @@ router.get('/', function(req, res) {
     }
 });
 
-/* GET login page. */
+/* POST login page. */
 router.post('/', function(req, res) {
     var sess = req.session;
     var userEmail = req.body.useremail;

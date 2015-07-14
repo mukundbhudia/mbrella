@@ -15,6 +15,6 @@ var userSchema = mongoose.Schema({
 userSchema.methods.getFullName = function() {
     var fullName = this.firstName + " " + this.lastName;
     return fullName;
-}
+};
 
 module.exports = mongoose.model('User', userSchema);

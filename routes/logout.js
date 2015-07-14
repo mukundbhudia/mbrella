@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
     var userToLogOut = sess.userfirstname;
     sess.destroy(function(err) {
         if (err) return logger.error(err);
-        logger.info("User: " + userToLogOut + " has logged out.")
+        logger.info("User: " + userToLogOut + " has logged out.");
         res.location('/');
         res.redirect('/');
     });
