@@ -21,14 +21,14 @@
         "Open Weather Map"
     ],
     "dependencies": {
-        "bcrypt": "~0.8.3",
-        "body-parser": "^1.13.2",
+        "bcrypt": "~0.8.4",
+        "body-parser": "^1.13.3",
         "cookie-parser": "^1.3.5",
         "debug": "^2.2.0",
-        "express": "^4.13.1",
+        "express": "^4.13.2",
         "express-session": "^1.11.3",
         "hjs": "~0.0.6",
-        "mongoose": "~3.8.33",
+        "mongoose": "~3.8.34",
         "morgan": "^1.6.1",
         "serve-favicon": "^2.3.0",
         "winston": "^1.0.1"
