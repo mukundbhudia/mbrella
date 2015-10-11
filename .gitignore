@@ -25,6 +25,9 @@ build/Release
 # IntelliJ Idea project files
 .idea
 
+# Node config file (for API keys etc)
+config.json
+
 # Dependency directory
 # Commenting this out is preferred by some people, see
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-

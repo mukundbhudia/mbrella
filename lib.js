@@ -12,7 +12,8 @@ var Weather = require('./models/Weather');
     the weather collection as part of the Weather model.
 */
 var getAndSaveWeather = function(cityID, callback) {
-    http.get("http://api.openweathermap.org/data/2.5/weather?id=" + cityID, function(getRes) {
+    var OWM_API_KEY = process.env.OWM_API_KEY || require('./config.json').OWM_API_KEY;
+    http.get("http://api.openweathermap.org/data/2.5/weather?APPID=" + OWM_API_KEY + "&id=" + cityID, function(getRes) {
         logger.info("...got response: " + getRes.statusCode + " collecting weather data...");
         //Build up the data from the HTTP GET request using the body variable (as it is streamed)
         var body = "";
@@ -87,7 +88,7 @@ var checkCountryData = function() {
                 "| | | | | | |_) | | |  __/ | | (_| |\n" +
                 "|_| |_| |_|_.__/|_|  \\___|_|_|\\__,_|\n");
     logger.info("App has been launched. Performing data checks...");
-    
+
     var countryCodeFile = "./data/slim-2.json";      //The name of the 2 char country code JSON file
     fs = require('fs');
     fs.readFile(countryCodeFile, 'utf8', function (err, data) {
