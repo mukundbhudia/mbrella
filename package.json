@@ -1,6 +1,6 @@
 {
     "name": "mbrella",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "A simple weather app",
     "author": "Mukund Bhudia <mukund.bhudia@hotmail.co.uk>",
     "private": true,
@@ -22,7 +22,7 @@
         "Open Weather Map"
     ],
     "dependencies": {
-        "bcrypt": "~0.8.5",
+        "bcrypt": "~4.0.1",
         "body-parser": "^1.14.2",
         "cookie-parser": "^1.4.0",
         "debug": "^2.2.0",
