@@ -23,10 +23,10 @@
     ],
     "dependencies": {
         "bcrypt": "~5.0.0",
-        "body-parser": "^1.14.2",
+        "body-parser": "^1.20.1",
         "cookie-parser": "^1.4.0",
         "debug": "^2.2.0",
-        "express": "^4.13.3",
+        "express": "^4.18.2",
         "express-session": "^1.11.3",
         "hjs": "~0.0.6",
         "mongoose": "~5.7.5",
@@ -36,6 +36,6 @@
     },
     "devDependencies": {
         "jasmine": "^2.4.1",
-        "supertest": "^1.1.0"
+        "supertest": "^6.3.3"
     }
 }
